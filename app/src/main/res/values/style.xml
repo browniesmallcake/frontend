@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 將狀態欄顏色設置為你想要的顏色 -->
+        <item name="android:statusBarColor">@color/Style_color</item>
+    </style>
+
+</resources>
