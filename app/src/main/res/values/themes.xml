@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.IdiotChefAssistant" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/Style_color</item>
+        <item name="colorPrimaryDark">#9A5603</item>
+        <item name="colorAccent">@color/Style_color</item>
+    </style>
+
+    <style name="Theme.IdiotChefAssistant" parent="Base.Theme.IdiotChefAssistant" />
+</resources>
