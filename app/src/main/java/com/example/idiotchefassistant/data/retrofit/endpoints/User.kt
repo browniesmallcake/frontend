@@ -96,6 +96,6 @@ interface User {
     @GET("/user/searches")
     fun searches(
         @Header("X-API-Key") token:String
-    ): Call<MessageResponse>
+    ): Call<SearchResponse>
 
 }
