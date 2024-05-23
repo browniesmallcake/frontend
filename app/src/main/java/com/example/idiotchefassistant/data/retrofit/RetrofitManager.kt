@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.data.retrofit
 
+import com.example.idiotchefassistant.data.retrofit.endpoints.User
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

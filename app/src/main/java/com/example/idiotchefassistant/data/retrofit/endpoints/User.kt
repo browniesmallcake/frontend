@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.data.retrofit
+package com.example.idiotchefassistant.data.retrofit.endpoints
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
@@ -30,7 +30,6 @@ data class UserResponse(
 )
 
 
-// A generic class that contains message of a **successful** operation.
 data class MessageResponse(
     val message:String
 )
@@ -45,31 +44,55 @@ data class SearchResponse(
 
 interface User {
 
+    /*
+     *  POST /user/login
+     *  It's a login endpoint
+     */
     @POST("/user/login")
     fun login(
         @Body loginRequestBody: LoginRequestBody
     ): Call<LoginResponse>
 
+    /*
+     *  GET /user/me
+     *  To get the token owner's information
+     */
     @GET("/user/me")
     fun me(
         @Header("X-API-Key") token:String
     ): Call<UserResponse>
 
+    /*
+     *  GET /user/logout
+     *  To logout this session.
+     */
     @GET("/user/logout")
     fun logout(
         @Header("X-API-Key") token:String
     ): Call<MessageResponse>
 
+    /*
+     *  GET /user/logout/all
+     *  To logout all sessions.
+     */
     @GET("/user/logout/all")
     fun logoutAll(
         @Header("X-API-Key") token:String
     ): Call<MessageResponse>
 
+    /*
+     *  POST /user/register
+     *  To register a new user
+     */
     @POST("/user/register")
     fun register(
         @Body loginRequestBody: RegisterRequestBody
     ): Call<MessageResponse>
 
+    /*
+     *  GET /user/searches
+     *  To get search history of the token owner
+     */
     @GET("/user/searches")
     fun searches(
         @Header("X-API-Key") token:String
