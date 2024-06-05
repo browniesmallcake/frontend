@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:padding="14dp"
-            android:src="@drawable/back_arrow_24" />
+            android:src="@drawable/search_24" />
 
         <EditText
             android:id="@+id/EditText"
@@ -48,6 +48,7 @@
             android:hint=" Recipe name" />
 
     </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecipeRecycleView"
         android:layout_width="match_parent"

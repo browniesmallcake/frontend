@@ -2,6 +2,7 @@ package com.example.idiotchefassistant
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -24,19 +25,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, R.string.open_nav,
-            R.string.close_nav
+            this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HomePage()).commit()
             navigationView.setCheckedItem(R.id.nav_home)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main_header, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_btn -> {
+                val intent = Intent(this, SearchPage::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -52,7 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, HomePage()).commit()
 
             R.id.nav_setting -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomePage()).commit()
+                .replace(R.id.fragment_container, SettingsFragment()).commit()
 
             R.id.nav_login -> {
                 val intent = Intent(this, LoginActivity::class.java)

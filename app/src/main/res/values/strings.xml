@@ -14,5 +14,22 @@
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="close_nav">Close Navigation Drawer</string>
     <string name="search_hint">Enter recipe name</string>
+    <string name="search_title">search title</string>
+    <string name="user_image">user img</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Setting</string>
+    <string name="sync_header">interface setting</string>
+
+    <!-- Messages Preferences -->
+    <string name="history_title">History</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+
+    <!-- res/values/strings.xml -->
+    <string name="user_review">Review: %d stars</string>
 
 </resources>

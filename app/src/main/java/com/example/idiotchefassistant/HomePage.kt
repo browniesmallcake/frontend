@@ -19,10 +19,10 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        /*binding.CameraBtn.setOnClickListener {
+        binding.CameraBtn.setOnClickListener {
             val intent = Intent(activity, CameraPage::class.java)
             startActivity(intent)
-        }*/
+        }
 
         val items = generateFakeData(10)
         val recycleView = binding.RecipeRecycleView
