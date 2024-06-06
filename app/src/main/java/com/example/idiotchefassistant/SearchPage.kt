@@ -17,10 +17,6 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         binding = ActivitySearchPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.SearchBtn.setOnClickListener {
-            val intent = Intent(this, SearchPage::class.java)
-            startActivity(intent)
-        }
         binding.EditText
         val item = mutableListOf<RecipeItem>()
         item.add(RecipeItem("搜尋食譜結果", "食譜的描述", 5))
