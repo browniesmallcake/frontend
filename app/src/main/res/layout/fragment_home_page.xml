@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".HomePage">
+    <!--camera-->
+    <RelativeLayout
+        android:id="@+id/PageTail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Style_color"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:id="@+id/CameraBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@android:string/ok"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="10dp"
+            android:paddingBottom="40dp"
+            android:src="@drawable/camera_24" />
+    </RelativeLayout>
+    <!--recipe list-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecipeRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/PageTail"
+        tools:listitem="@layout/recipe_item_list" />
+</RelativeLayout>
