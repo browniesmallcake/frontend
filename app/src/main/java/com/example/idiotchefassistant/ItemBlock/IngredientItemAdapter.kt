@@ -1,16 +1,16 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.ItemBlock
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.idiotchefassistant.databinding.RecipeItemListBinding
+import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding;
 
-class RecipeItemAdapter(private val items: List<RecipeItem>) :
-    RecyclerView.Adapter<RecipeItemAdapter.ViewHolder>() {
+class IngredientItemAdapter(private val items: kotlin.collections.List<IngredientItem>) :
+    RecyclerView.Adapter<IngredientItemAdapter.ViewHolder>() {
 
-    private var itemClickListener:OnItemClickListener? = null
+    private var itemClickListener: OnItemClickListener? = null
 
-    inner class ViewHolder(private val binding: RecipeItemListBinding) :
+    inner class ViewHolder(private val binding:RecyclerViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -23,15 +23,13 @@ class RecipeItemAdapter(private val items: List<RecipeItem>) :
             }
         }
 
-        fun bind(item: RecipeItem) {
+        fun bind(item: IngredientItem) {
             binding.itemTitle.text = item.Title
-            binding.itemDesc.text = item.description
-            binding.itemReview.text = item.review.toString()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecipeItemListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = RecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ViewHolder(binding)
     }
 
@@ -49,6 +47,6 @@ class RecipeItemAdapter(private val items: List<RecipeItem>) :
     }
 
     interface OnItemClickListener{
-        fun onItemClick(item: RecipeItem)
+        fun onItemClick(item: IngredientItem)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.RecipeBlock
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

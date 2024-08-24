@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.RecipeBlock
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.idiotchefassistant.CameraPage
 import com.example.idiotchefassistant.databinding.FragmentHomePageBinding
 
 class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {

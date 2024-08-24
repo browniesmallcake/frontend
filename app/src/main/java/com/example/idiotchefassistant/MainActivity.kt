@@ -9,6 +9,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.idiotchefassistant.RecipeBlock.HomePage
+import com.example.idiotchefassistant.RecipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
 import com.example.idiotchefassistant.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
@@ -88,4 +90,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.onBackPressed()
         }
     }
+
 }

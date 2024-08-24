@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.RecipeBlock
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.databinding.ActivitySearchPageBinding
 
-class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
+class HistoryPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var binding: ActivitySearchPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,9 +17,13 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         binding = ActivitySearchPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.SearchBtn.setOnClickListener {
+            val intent = Intent(this, HistoryPage::class.java)
+            startActivity(intent)
+        }
         binding.EditText
         val item = mutableListOf<RecipeItem>()
-        item.add(RecipeItem("搜尋食譜結果", "食譜的描述", 5))
+        item.add(RecipeItem("搜尋食譜歷史", "食譜的描述", 5))
         val recycleView = binding.RecipeRecycleView
         recycleView.layoutManager = LinearLayoutManager(this)
 
@@ -33,6 +37,3 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         startActivity(intent)
     }
 }
-
-
-
