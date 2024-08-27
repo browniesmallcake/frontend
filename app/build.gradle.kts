@@ -62,6 +62,9 @@ dependencies {
     implementation("androidx.camera:camera-video:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
-
-
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation("androidx.lifecycle:lifecycle-extensions:2.0.0")
+    annotationProcessor("androidx.lifecycle:lifecycle-compiler:2.0.0")
 }

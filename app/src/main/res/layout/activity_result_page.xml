@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:padding="10dp"
         tools:itemCount="12"
@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="30dp"
         android:text="Add Ingredient" />
 
     <Button
@@ -34,10 +35,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="87dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginHorizontal="30dp"
+
         android:text="search" />
 </RelativeLayout>

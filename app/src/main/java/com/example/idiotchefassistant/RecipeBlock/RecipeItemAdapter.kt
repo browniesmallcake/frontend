@@ -44,7 +44,7 @@ class RecipeItemAdapter(private val items: List<RecipeItem>) :
         holder.bind(item)
     }
 
-    fun setOnItemClickListener(listener: HomePage) {
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
         itemClickListener = listener
     }
 

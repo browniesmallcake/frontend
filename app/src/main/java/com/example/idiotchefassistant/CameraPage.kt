@@ -25,8 +25,8 @@ import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
-import androidx.core.content.PermissionChecker
-import com.example.idiotchefassistant.ItemBlock.ResultPage
+import com.example.idiotchefassistant.ResultBlock.ResultPage
+import com.example.idiotchefassistant.ResultBlock.ResultViewModel
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -57,7 +57,7 @@ class CameraPage : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    // Implements VideoCapture use case, including start and stop capturing.
+    // Implaements VideoCapture use case, including start nd stop capturing.
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return // 如果未建立，則不執行
 
@@ -88,14 +88,6 @@ class CameraPage : AppCompatActivity() {
             .build()
         recording = videoCapture.output
             .prepareRecording(this, mediaStoreOutputOptions)
-            .apply {
-                if (PermissionChecker.checkSelfPermission(this@CameraPage,
-                        Manifest.permission.RECORD_AUDIO) ==
-                    PermissionChecker.PERMISSION_GRANTED)
-                {
-                    withAudioEnabled()
-                }
-            }
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
@@ -106,20 +98,18 @@ class CameraPage : AppCompatActivity() {
                     }
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
-                            val msg = "Video capture succeeded: " +
-                                    "${recordEvent.outputResults.outputUri}"
-                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
-                                .show()
+                            val msg = "Video capture succeeded: " + "${recordEvent.outputResults.outputUri}"
+                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                             Log.d(TAG, msg)
-                            val intent = Intent(this@CameraPage, ResultPage::class.java).apply {
-                                putExtra("videoUri", recordEvent.outputResults.outputUri.toString())
+                            val intent = Intent(this@CameraPage, ResultViewModel::class.java).apply {
+//                                putExtra("videoUri", recordEvent.outputResults.outputUri.toString())
                             }
                             startActivity(intent)
-                            } else {
+                        }
+                        else {
                             recording?.close()
                             recording = null
-                            Log.e(TAG, "Video capture ends with error: " +
-                                    "${recordEvent.error}")
+                            Log.e(TAG, "Video capture ends with error: " + "${recordEvent.error}")
                         }
                         viewBinding.videoCaptureButton.apply {
                             text = getString(R.string.start_capture)
@@ -163,8 +153,7 @@ class CameraPage : AppCompatActivity() {
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onDestroy() {
@@ -179,7 +168,6 @@ class CameraPage : AppCompatActivity() {
         private val REQUIRED_PERMISSIONS =
             mutableListOf (
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
             ).apply {
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -188,8 +176,8 @@ class CameraPage : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults:
-        IntArray) {
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
