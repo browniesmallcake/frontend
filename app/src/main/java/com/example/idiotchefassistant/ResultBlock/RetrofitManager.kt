@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-//val retrofitClient = RetrofitManager()
+val retrofitClient = RetrofitManager()
 
 class RetrofitManager internal constructor() {
 

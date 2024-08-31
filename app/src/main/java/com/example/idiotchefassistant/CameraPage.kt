@@ -21,6 +21,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
 import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
@@ -28,6 +29,7 @@ import androidx.camera.video.VideoRecordEvent
 import com.example.idiotchefassistant.ResultBlock.ResultPage
 import com.example.idiotchefassistant.ResultBlock.ResultViewModel
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -70,22 +72,23 @@ class CameraPage : AppCompatActivity() {
             recording = null
             return
         }
-
         // create and start a new recording session
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video")
-            }
-        }
+        val videoFile = File(cacheDir, "${name}.mp4")
+        val mediaStoreOutputOptions = FileOutputOptions.Builder(videoFile).build()
 
-        val mediaStoreOutputOptions = MediaStoreOutputOptions
-            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-            .setContentValues(contentValues)
-            .build()
+//        val contentValues = ContentValues().apply {
+//            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+//            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+//                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video")
+//            }
+//        }
+//        val mediaStoreOutputOptions = MediaStoreOutputOptions
+//            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+//            .setContentValues(contentValues)
+//            .build()
         recording = videoCapture.output
             .prepareRecording(this, mediaStoreOutputOptions)
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
@@ -99,10 +102,22 @@ class CameraPage : AppCompatActivity() {
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
                             val msg = "Video capture succeeded: " + "${recordEvent.outputResults.outputUri}"
-                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                             Log.d(TAG, msg)
-                            val intent = Intent(this@CameraPage, ResultViewModel::class.java).apply {
-//                                putExtra("videoUri", recordEvent.outputResults.outputUri.toString())
+
+                            val files = cacheDir.listFiles()
+                            files?.forEach {
+                                Log.d(TAG, "File in cache: ${it.name} - Size: ${it.length()} bytes")
+                            }
+                            val videoFile = File(cacheDir, "${name}.mp4")
+                            if (files?.contains(videoFile) == true) {
+                                Log.d(TAG, "Video file ${videoFile.name} found in cache.")
+                            } else {
+                                Log.e(TAG, "Video file not found in cache.")
+                            }
+
+                            val intent = Intent(this, ResultPage::class.java).apply {
+                                putExtra("videoUri", videoFile.name.toString())
                             }
                             startActivity(intent)
                         }

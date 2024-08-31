@@ -2,7 +2,10 @@ package com.example.idiotchefassistant.ResultBlock
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,10 +36,11 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
         resultRepository = ResultRepository()
         resultFactory = ResultFactory(resultRepository)
         resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
-//        val video = intent.getStringExtra("videoUri")
+        val video = intent.getStringExtra("videoUri")
 
-//        // upload video
-//        val videoFile = File("${video}")
+        // upload video
+        val videoFile = File("${video}")
+        Log.i("videoFile", "Video file is exist: ${videoFile.exists()}")
 //        val fbody = videoFile.asRequestBody()
 //        retrofitClient.detectAPI.detect(fbody)
 
