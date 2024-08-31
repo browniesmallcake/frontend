@@ -117,7 +117,7 @@ class CameraPage : AppCompatActivity() {
                             }
 
                             val intent = Intent(this, ResultPage::class.java).apply {
-                                putExtra("videoUri", videoFile.name.toString())
+                                putExtra("videoUri", "${videoFile}")
                             }
                             startActivity(intent)
                         }

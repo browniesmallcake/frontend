@@ -17,7 +17,13 @@ import com.example.idiotchefassistant.ItemBlock.IngredientItem
 import com.example.idiotchefassistant.ItemBlock.IngredientItemAdapter
 import com.example.idiotchefassistant.RecipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Callback
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Response
 import java.io.File
 
 
@@ -40,9 +46,18 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
 
         // upload video
         val videoFile = File("${video}")
-        Log.i("videoFile", "Video file is exist: ${videoFile.exists()}")
-//        val fbody = videoFile.asRequestBody()
-//        retrofitClient.detectAPI.detect(fbody)
+//        Log.i("videoFile", "Video file is exist: ${videoFile}")
+//        Log.i("videoFile", "Video file is exist: ${videoFile.exists()}")
+        val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
+        val fbody = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
+        detectService.detect(fbody).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("onResponse2","OK")
+            }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.i("onFailure2","${t}")
+            }
+        })
 
         // get the data from server
         val dialog = ProgressDialog.show(
