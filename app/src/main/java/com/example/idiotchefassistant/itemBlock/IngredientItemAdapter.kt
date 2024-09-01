@@ -1,11 +1,11 @@
-package com.example.idiotchefassistant.ItemBlock
+package com.example.idiotchefassistant.itemBlock
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding;
 
-class IngredientItemAdapter(private val items: kotlin.collections.List<IngredientItem>) :
+class IngredientItemAdapter(private var items: kotlin.collections.List<IngredientItem>) :
     RecyclerView.Adapter<IngredientItemAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
@@ -44,6 +44,11 @@ class IngredientItemAdapter(private val items: kotlin.collections.List<Ingredien
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         itemClickListener = listener
+    }
+
+    fun updateItems(newItems: List<IngredientItem>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     interface OnItemClickListener{

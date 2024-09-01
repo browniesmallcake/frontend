@@ -1,31 +1,26 @@
-package com.example.idiotchefassistant.ResultBlock
+package com.example.idiotchefassistant.resultBlock
 
 import android.app.ProgressDialog
 import android.content.Intent
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.idiotchefassistant.ItemBlock.IngredientDialogFragment
-import com.example.idiotchefassistant.ItemBlock.IngredientItem
-import com.example.idiotchefassistant.ItemBlock.IngredientItemAdapter
-import com.example.idiotchefassistant.RecipeBlock.SearchPage
+import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
+import com.example.idiotchefassistant.itemBlock.IngredientItem
+import com.example.idiotchefassistant.itemBlock.IngredientItemAdapter
+import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Callback
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
-
 
 class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListener {
     private lateinit var binding: ActivityResultPageBinding
@@ -46,8 +41,6 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
 
         // upload video
         val videoFile = File("${video}")
-//        Log.i("videoFile", "Video file is exist: ${videoFile}")
-//        Log.i("videoFile", "Video file is exist: ${videoFile.exists()}")
         val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
         val fbody = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
         detectService.detect(fbody).enqueue(object : Callback<ResponseBody> {
@@ -60,41 +53,39 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
         })
 
         // get the data from server
+        val recyclerView = binding.recyclerViewIngredients
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = IngredientItemAdapter(emptyList())
+        adapter.setOnItemClickListener(this)
+        recyclerView.adapter = adapter
+
         val dialog = ProgressDialog.show(
             this, "",
             "Loading. Please wait...", true
         )
         dialog.show()
-        resultViewModel.callResult().observe(this, Observer {
+        resultViewModel.callBack().observe(this, Observer {
             dialog.dismiss()
-            Toast.makeText(this, "name:${it.resultName}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "name:${it.resultName}", Toast.LENGTH_SHORT).show()
+            val items = it.resultNames?.map { name ->
+                IngredientItem(name)
+            } ?: emptyList()
+            adapter.updateItems(items)
         })
 
         binding.addButton.setOnClickListener {
             IngredientDialogFragment().show(supportFragmentManager, "customDialog")
         }
 
-        val items = generateFakeData(10)
-        val recycleView = binding.recyclerViewIngredients
-        recycleView.layoutManager = LinearLayoutManager(this)
-
-        val adapter = IngredientItemAdapter(items)
-        adapter.setOnItemClickListener(this)
-        recycleView.adapter = adapter
-
         binding.searchButton.setOnClickListener {
             val intent = Intent(this, SearchPage::class.java)
             startActivity(intent)
         }
+
     }
 
     override fun onItemClick(item: IngredientItem) {
         IngredientDialogFragment().show(supportFragmentManager, "customDialog")
     }
-
-    private fun generateFakeData(cnt: Int): List<IngredientItem> {
-        return List(cnt) { IngredientItem("Item ${it + 1}") }
-    }
-
 }
 

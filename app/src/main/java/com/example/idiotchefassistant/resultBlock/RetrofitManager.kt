@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ResultBlock
+package com.example.idiotchefassistant.resultBlock
 
 import DetectAPI
 import retrofit2.Retrofit

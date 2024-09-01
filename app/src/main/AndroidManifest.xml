@@ -20,19 +20,19 @@
         android:theme="@style/Theme.IdiotChefAssistant"
         tools:targetApi="31">
         <activity
-            android:name=".ResultBlock.ResultPage"
+            android:name=".resultBlock.ResultPage"
             android:exported="false"/>
         <activity
-            android:name=".RecipeBlock.HistoryPage"
+            android:name=".recipeBlock.HistoryPage"
             android:exported="false" />
         <activity
             android:name=".CameraPage"
             android:exported="false" />
         <activity
-            android:name=".RecipeBlock.RecipePage"
+            android:name=".recipeBlock.RecipePage"
             android:exported="false" />
         <activity
-            android:name=".RecipeBlock.SearchPage"
+            android:name=".recipeBlock.SearchPage"
             android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"

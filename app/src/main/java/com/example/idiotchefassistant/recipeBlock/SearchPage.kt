@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.RecipeBlock
+package com.example.idiotchefassistant.recipeBlock
 
 import android.content.Intent
 import android.os.Bundle

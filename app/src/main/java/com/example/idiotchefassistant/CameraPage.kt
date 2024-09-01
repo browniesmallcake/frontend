@@ -1,12 +1,10 @@
 package com.example.idiotchefassistant
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
@@ -22,12 +20,10 @@ import androidx.camera.core.CameraSelector
 import android.util.Log
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.FileOutputOptions
-import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
-import com.example.idiotchefassistant.ResultBlock.ResultPage
-import com.example.idiotchefassistant.ResultBlock.ResultViewModel
+import com.example.idiotchefassistant.resultBlock.ResultPage
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.io.File
 import java.text.SimpleDateFormat

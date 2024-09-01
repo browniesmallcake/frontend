@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ResultBlock
+package com.example.idiotchefassistant.resultBlock
 
 import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModel

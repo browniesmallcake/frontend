@@ -1,12 +1,12 @@
-package com.example.idiotchefassistant.ResultBlock
+package com.example.idiotchefassistant.resultBlock
 
 import java.util.concurrent.Executors
 
 class ResultRepository {
     fun loadResult(task: OnTaskFinish) {
-        Executors.newSingleThreadExecutor().submit{
+        Executors.newSingleThreadExecutor().submit {
             val results = ResultData()
-            results.resultName = "beef"
+            results.resultNames = arrayOf("beef", "chicken", "pork")
             Thread.sleep(3000)
             task.onFinish(results)
         }

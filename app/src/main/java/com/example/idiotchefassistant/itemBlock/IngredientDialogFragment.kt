@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ItemBlock
+package com.example.idiotchefassistant.itemBlock
 
 import android.os.Bundle
 import android.view.LayoutInflater

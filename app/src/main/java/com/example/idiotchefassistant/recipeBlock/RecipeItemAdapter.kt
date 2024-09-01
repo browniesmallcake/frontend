@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.RecipeBlock
+package com.example.idiotchefassistant.recipeBlock
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
