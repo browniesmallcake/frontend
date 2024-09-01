@@ -11,5 +11,5 @@ interface DetectAPI {
     @POST("/detect/latest/video")
     fun detect(
         @Part("") video: MultipartBody.Part
-    ): Call<ResponseBody>
+    ): Call<HashMap<String,ArrayList<String>>>
 }

@@ -7,7 +7,7 @@ class IngredientRepository {
         Executors.newSingleThreadExecutor().submit {
             val ingredients = IngredientData()
             ingredients.ingredientNames = arrayOf("beef", "chicken", "pork", "tomato", "banana", "potato", "egg")
-            Thread.sleep(3000)
+            Thread.sleep(500)
             task.onFinish(ingredients)
         }
     }
