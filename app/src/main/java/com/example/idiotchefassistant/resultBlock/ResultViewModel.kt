@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.appcompat.app.AlertDialog
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -23,7 +24,30 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         return userLiveData
     }
 
-    fun upload(video: String?){
+    fun addData(item: String) {
+        val currentArray = resultRepository.getNowResults()
+        val updatedArray = currentArray?.plus(item) ?: arrayOf(item)
+        resultRepository.uploadResult(updatedArray)
+    }
+
+    fun deleteData(item: String) {
+        val currentArray = resultRepository.getNowResults()
+        if (currentArray != null){
+            val updatedArray = currentArray.filter { it != item }.toTypedArray()
+            resultRepository.uploadResult(updatedArray)
+        }
+    }
+
+    fun findData(item: String):Boolean {
+        val currentArray = resultRepository.getNowResults()
+        if (currentArray == null || !currentArray.contains(item)) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    fun uploadVideo(video: String?){
         // upload video
         val videoFile = File(video.toString())
         val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
@@ -39,6 +63,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                             keyList += i
                         }
                     resultRepository.uploadResult(keyList)
+//                    callBack()
                 }
             }
             override fun onFailure(call: Call<HashMap<String, ArrayList<String>>>, t: Throwable) {

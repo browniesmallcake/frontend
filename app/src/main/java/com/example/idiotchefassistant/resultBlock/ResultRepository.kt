@@ -3,7 +3,7 @@ package com.example.idiotchefassistant.resultBlock
 import java.util.concurrent.Executors
 
 class ResultRepository {
-    var nowResults: Array<String>? = arrayOf("beef", "chicken", "pork")
+    private var nowResults: Array<String>? = arrayOf("beef")
     fun loadResult(task: OnTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
             val results = ResultData()
@@ -15,6 +15,10 @@ class ResultRepository {
 
     fun uploadResult(newResults: Array<String>) {
         nowResults = newResults
+    }
+
+    fun getNowResults(): Array<String>? {
+        return nowResults
     }
 }
 

@@ -25,7 +25,6 @@ class IngredientDialogFragment : DialogFragment() {
         val view = binding.root
         binding.searchEditText
         binding.listViewItems
-
         // Set up the list and adapter
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)

@@ -3,30 +3,24 @@ package com.example.idiotchefassistant.resultBlock
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
 import com.example.idiotchefassistant.itemBlock.IngredientItem
-import com.example.idiotchefassistant.itemBlock.IngredientItemAdapter
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.Callback
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
-import java.io.File
 
-class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListener {
+class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener {
     private lateinit var binding: ActivityResultPageBinding
     private lateinit var resultViewModel: ResultViewModel
     private lateinit var resultFactory: ResultFactory
     private lateinit var resultRepository: ResultRepository
+
+    private lateinit var adapter: ResultItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +33,12 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
         resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
 
         val video = intent.getStringExtra("videoUri")
-        resultViewModel.upload(video)
+        resultViewModel.uploadVideo(video)
 
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = IngredientItemAdapter(emptyList())
+        adapter = ResultItemAdapter(emptyList())
         adapter.setOnItemClickListener(this)
         recyclerView.adapter = adapter
 
@@ -55,7 +49,6 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
         dialog.show()
         resultViewModel.callBack().observe(this, Observer {
             dialog.dismiss()
-//            Toast.makeText(this, "name:${it.resultName}", Toast.LENGTH_SHORT).show()
             val items = it.resultNames?.map { name ->
                 IngredientItem(name)
             } ?: emptyList()
@@ -73,8 +66,31 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
 
     }
 
-    override fun onItemClick(item: IngredientItem) {
+    override fun onEditClick(item: IngredientItem) {
+        // 跳轉到 IngredientDialogFragment
         IngredientDialogFragment().show(supportFragmentManager, "customDialog")
+    }
+
+    override fun onDeleteClick(item: IngredientItem) {
+        AlertDialog.Builder(this)
+            .setTitle("Confirm Delete")
+            .setMessage("Are you sure you want to delete this item?")
+            .setPositiveButton("Yes") { _, _ ->
+                if(!resultViewModel.findData(item.Title)){
+                    AlertDialog.Builder(this)
+                    .setTitle("Item Not Found")
+                    .setMessage("The item \"${item.Title}\" does not exist in the list.")
+                    .setPositiveButton("OK", null)
+                    .show()
+                }
+                else {
+                    resultViewModel.deleteData(item.Title)
+                }
+                adapter.updateItems(resultRepository.getNowResults()?.map { IngredientItem(it) } ?: emptyList())
+                adapter.notifyDataSetChanged()
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 }
 
