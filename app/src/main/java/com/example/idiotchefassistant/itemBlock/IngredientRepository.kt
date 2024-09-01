@@ -6,7 +6,7 @@ class IngredientRepository {
     fun loadIngredient(task: OnTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
             val ingredients = IngredientData()
-            ingredients.ingredientNames = arrayOf("beef", "chicken", "pork")
+            ingredients.ingredientNames = arrayOf("beef", "chicken", "pork", "tomato", "banana", "potato", "egg")
             Thread.sleep(3000)
             task.onFinish(ingredients)
         }
@@ -14,9 +14,5 @@ class IngredientRepository {
 }
 
 interface OnTaskFinish{
-    fun onFinish(data: IngredientData) {
-        data.ingredientNames?.forEach {
-                name ->
-        }
-    }
+    fun onFinish(data: IngredientData)
 }
