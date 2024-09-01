@@ -37,23 +37,9 @@ class ResultPage : AppCompatActivity(), IngredientItemAdapter.OnItemClickListene
         resultRepository = ResultRepository()
         resultFactory = ResultFactory(resultRepository)
         resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
-        val video = intent.getStringExtra("videoUri")
 
-        // upload video
-        val videoFile = File("${video}")
-        val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
-        val fbody = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
-        detectService.detect(fbody).enqueue(object : Callback<HashMap<String,ArrayList<String>>> {
-            override fun onResponse(call: Call<HashMap<String,ArrayList<String>>>, response: Response<HashMap<String,ArrayList<String>>>) {
-                if(response.isSuccessful) {
-                    response.body()
-                    Log.i("onResponse2","OK")
-                }
-            }
-            override fun onFailure(call: Call<HashMap<String,ArrayList<String>>>, t: Throwable) {
-                Log.i("onFailure2","${t}")
-            }
-        })
+        val video = intent.getStringExtra("videoUri")
+        resultViewModel.upload(video)
 
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients
