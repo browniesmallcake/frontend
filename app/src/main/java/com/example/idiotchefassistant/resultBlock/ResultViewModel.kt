@@ -4,13 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.appcompat.app.AlertDialog
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import com.example.idiotchefassistant.resultBlock.ResultRepository.OnTaskFinish
 
 class ResultViewModel(private var resultRepository: ResultRepository): ViewModel() {
     private var userLiveData = MutableLiveData<ResultData>()
@@ -32,6 +32,15 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             currentMap[title] = arrayListOf(image)
         }
         resultRepository.uploadData(currentMap)
+    }
+
+    fun editData(oldTitle: String, newTitle: String) {
+        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: mutableMapOf()
+        val images = currentMap.remove(oldTitle)
+        if (images != null) {
+            currentMap[newTitle] = images
+            resultRepository.uploadData(currentMap)
+        }
     }
 
     fun deleteData(title: String, image: String? = null) {

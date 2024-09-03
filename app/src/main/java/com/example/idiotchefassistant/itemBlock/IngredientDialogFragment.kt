@@ -52,11 +52,9 @@ class IngredientDialogFragment : DialogFragment() {
             adapter.addAll(items.toList())
             adapter.notifyDataSetChanged()
         })
-        binding.listViewItems.setOnItemClickListener { _, view, position, _ ->
-            // 記錄選中的位置和名稱
+        binding.listViewItems.setOnItemClickListener { _, _, position, _ ->
             selectedPosition = position
             selectedItemName = adapter.getItem(position)
-            // 刷新列表來更新選中效果
             adapter.notifyDataSetChanged()
         }
 
@@ -74,13 +72,6 @@ class IngredientDialogFragment : DialogFragment() {
             listener?.onItemSelected(selectedItemName)
             dismiss()
         }
-
-        binding.buttonCancel.setOnClickListener { dismiss() }
-        binding.buttonConfirm.setOnClickListener {
-            // Handle confirmation logic
-            dismiss()
-        }
-
         return view
     }
 
@@ -92,8 +83,9 @@ class IngredientDialogFragment : DialogFragment() {
     fun setOnItemSelectedListener(listener: OnItemSelectedListener) {
         this.listener = listener
     }
+
+    interface OnItemSelectedListener {
+        fun onItemSelected(itemName: String?)
+    }
 }
 
-interface OnItemSelectedListener {
-    fun onItemSelected(itemName: String?)
-}

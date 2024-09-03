@@ -1,26 +1,29 @@
 package com.example.idiotchefassistant.resultBlock
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import java.util.concurrent.Executors
 
 class ResultRepository {
-    private var nowDatas: Map<String, ArrayList<String>>? = mapOf("beef" to arrayListOf("app/src/main/res/drawable/logo.png"))
-    fun loadData(task: OnTaskFinish) {
+    private var nowDatas: MutableLiveData<Map<String, ArrayList<String>>> = MutableLiveData(emptyMap())
+    fun loadData(task: OnTaskFinish): LiveData<Map<String, ArrayList<String>>> {
         Executors.newSingleThreadExecutor().submit {
             val results = ResultData()
-            results.result = nowDatas
+            results.result = nowDatas.value
 //            Thread.sleep(3000)
             task.onFinish(results)
         }
+        return nowDatas
     }
 
     fun uploadData(newResults: Map<String, ArrayList<String>>) {
-        nowDatas = newResults
+        nowDatas.value = newResults
     }
 
     fun getDatas(): Map<String, ArrayList<String>>? {
-        return nowDatas
+        return nowDatas.value
     }
-}
 
-interface OnTaskFinish{
-    fun onFinish(data: ResultData)
+    interface OnTaskFinish{
+        fun onFinish(data: ResultData)
+    }
 }
