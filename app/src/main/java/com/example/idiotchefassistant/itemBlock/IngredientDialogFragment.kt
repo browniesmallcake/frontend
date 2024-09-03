@@ -18,6 +18,9 @@ class IngredientDialogFragment : DialogFragment() {
     private lateinit var ingredientViewModel: IngredientViewModel
     private lateinit var ingredientFactory: IngredientFactory
     private lateinit var ingredientRepository: IngredientRepository
+    private var selectedPosition: Int? = null
+    private var selectedItemName: String? = null
+    private var listener: OnItemSelectedListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,15 +30,35 @@ class IngredientDialogFragment : DialogFragment() {
         val view = binding.root
 
         binding.listViewItems
-        // Set up the list and adapter
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
         ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
-
+        // Set up the list and adapter
+        val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                if (position == selectedPosition) {
+                    view.setBackgroundColor(resources.getColor(android.R.color.holo_orange_light))
+                } else {
+                    view.setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+                return view
+            }
+        }
+        binding.listViewItems.adapter = adapter
         ingredientViewModel.callBack().observe(this, Observer {
             val items = it.ingredientNames?: emptyArray()
-            binding.listViewItems.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
+            adapter.clear()
+            adapter.addAll(items.toList())
+            adapter.notifyDataSetChanged()
         })
+        binding.listViewItems.setOnItemClickListener { _, view, position, _ ->
+            // 記錄選中的位置和名稱
+            selectedPosition = position
+            selectedItemName = adapter.getItem(position)
+            // 刷新列表來更新選中效果
+            adapter.notifyDataSetChanged()
+        }
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -48,7 +71,7 @@ class IngredientDialogFragment : DialogFragment() {
 
         binding.buttonCancel.setOnClickListener { dismiss() }
         binding.buttonConfirm.setOnClickListener {
-            // Handle confirmation logic
+            listener?.onItemSelected(selectedItemName)
             dismiss()
         }
 
@@ -65,4 +88,12 @@ class IngredientDialogFragment : DialogFragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun setOnItemSelectedListener(listener: OnItemSelectedListener) {
+        this.listener = listener
+    }
+}
+
+interface OnItemSelectedListener {
+    fun onItemSelected(itemName: String?)
 }
