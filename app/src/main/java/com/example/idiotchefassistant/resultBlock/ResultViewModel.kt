@@ -24,27 +24,33 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         return userLiveData
     }
 
-    fun addData(item: String) {
-        val currentArray = resultRepository.getNowResults()
-        val updatedArray = currentArray?.plus(item) ?: arrayOf(item)
-        resultRepository.uploadResult(updatedArray)
+    fun addData(title: String, image: String) {
+        val currentMap = resultRepository.getNowResults()?.toMutableMap() ?: mutableMapOf()
+        if (currentMap.containsKey(title)) {
+            currentMap[title]?.add(image)
+        } else {
+            currentMap[title] = arrayListOf(image)
+        }
+        resultRepository.uploadResult(currentMap)
     }
 
-    fun deleteData(item: String) {
-        val currentArray = resultRepository.getNowResults()
-        if (currentArray != null){
-            val updatedArray = currentArray.filter { it != item }.toTypedArray()
-            resultRepository.uploadResult(updatedArray)
+    fun deleteData(title: String, image: String? = null) {
+        val currentMap = resultRepository.getNowResults()?.toMutableMap() ?: return
+
+        if (image == null) {
+            currentMap.remove(title)
+        } else {
+            currentMap[title]?.remove(image)
+            if (currentMap[title].isNullOrEmpty()) {
+                currentMap.remove(title)
+            }
         }
+        resultRepository.uploadResult(currentMap)
     }
 
     fun findData(item: String):Boolean {
-        val currentArray = resultRepository.getNowResults()
-        if (currentArray == null || !currentArray.contains(item)) {
-            return false
-        } else {
-            return true
-        }
+        val currentMap = resultRepository.getNowResults()
+        return currentMap?.containsKey(item) == true
     }
 
     fun uploadVideo(video: String?){
@@ -55,14 +61,9 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         detectService.detect(fbody).enqueue(object : Callback<HashMap<String, ArrayList<String>>> {
             override fun onResponse(call: Call<HashMap<String, ArrayList<String>>>, response: Response<HashMap<String, ArrayList<String>>>) {
                 if(response.isSuccessful) {
-                    val map = response.body()?.keys
+                    val map = response.body()
                     Log.i("onResponse2","OK")
-                    var keyList = arrayOf<String>()
-                    if(map != null)
-                        for(i in map){
-                            keyList += i
-                        }
-                    resultRepository.uploadResult(keyList)
+                    resultRepository.uploadResult(map?: emptyMap())
 //                    callBack()
                 }
             }

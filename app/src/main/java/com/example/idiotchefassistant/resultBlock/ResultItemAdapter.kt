@@ -6,9 +6,8 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding;
-import com.example.idiotchefassistant.itemBlock.IngredientItem
 
-class ResultItemAdapter(private var items: kotlin.collections.List<IngredientItem>) :
+class ResultItemAdapter(private var items: kotlin.collections.List<ResultItem>) :
     RecyclerView.Adapter<ResultItemAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
@@ -27,7 +26,7 @@ class ResultItemAdapter(private var items: kotlin.collections.List<IngredientIte
 //            }
 //        }
 
-        fun bind(item: IngredientItem) {
+        fun bind(item: ResultItem) {
             binding.itemTitle.text = item.Title
             editButton.setOnClickListener {
                 itemClickListener?.onEditClick(item)
@@ -56,13 +55,13 @@ class ResultItemAdapter(private var items: kotlin.collections.List<IngredientIte
         this.itemClickListener = listener
     }
 
-    fun updateItems(newItems: List<IngredientItem>) {
+    fun updateItems(newItems: List<ResultItem>) {
         items = newItems
         notifyDataSetChanged()
     }
 
     interface OnItemClickListener{
-        fun onEditClick(item: IngredientItem)
-        fun onDeleteClick(item: IngredientItem)
+        fun onEditClick(item: ResultItem)
+        fun onDeleteClick(item: ResultItem)
     }
 }

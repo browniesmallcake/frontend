@@ -1,23 +1,22 @@
 package com.example.idiotchefassistant.resultBlock
-
 import java.util.concurrent.Executors
 
 class ResultRepository {
-    private var nowResults: Array<String>? = arrayOf("beef")
+    private var nowResults: Map<String, ArrayList<String>>? = mapOf("beef" to arrayListOf("app/src/main/res/drawable/logo.png"))
     fun loadResult(task: OnTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
             val results = ResultData()
-            results.resultNames = nowResults
-            Thread.sleep(3000)
+            results.result = nowResults
+//            Thread.sleep(3000)
             task.onFinish(results)
         }
     }
 
-    fun uploadResult(newResults: Array<String>) {
+    fun uploadResult(newResults: Map<String, ArrayList<String>>) {
         nowResults = newResults
     }
 
-    fun getNowResults(): Array<String>? {
+    fun getNowResults(): Map<String, ArrayList<String>>? {
         return nowResults
     }
 }

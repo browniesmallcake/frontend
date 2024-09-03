@@ -1,5 +1,5 @@
 package com.example.idiotchefassistant.resultBlock
 
 class ResultData {
-    var resultNames: Array<String>? = null
+    var result: Map<String, ArrayList<String>>? = null
 }

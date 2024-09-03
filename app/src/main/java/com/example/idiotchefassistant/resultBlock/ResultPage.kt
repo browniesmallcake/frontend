@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
-import com.example.idiotchefassistant.itemBlock.IngredientItem
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
 
@@ -49,8 +48,8 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener {
         dialog.show()
         resultViewModel.callBack().observe(this, Observer {
             dialog.dismiss()
-            val items = it.resultNames?.map { name ->
-                IngredientItem(name)
+            val items = it.result?.map { entry ->
+                ResultItem(entry.value, entry.key)
             } ?: emptyList()
             adapter.updateItems(items)
         })
@@ -66,12 +65,12 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener {
 
     }
 
-    override fun onEditClick(item: IngredientItem) {
+    override fun onEditClick(item: ResultItem) {
         // 跳轉到 IngredientDialogFragment
         IngredientDialogFragment().show(supportFragmentManager, "customDialog")
     }
 
-    override fun onDeleteClick(item: IngredientItem) {
+    override fun onDeleteClick(item: ResultItem) {
         AlertDialog.Builder(this)
             .setTitle("Confirm Delete")
             .setMessage("Are you sure you want to delete this item?")
@@ -86,7 +85,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener {
                 else {
                     resultViewModel.deleteData(item.Title)
                 }
-                adapter.updateItems(resultRepository.getNowResults()?.map { IngredientItem(it) } ?: emptyList())
+                adapter.updateItems(resultRepository.getNowResults()?.map { ResultItem(it.value, it.key) } ?: emptyList())
                 adapter.notifyDataSetChanged()
             }
             .setNegativeButton("No", null)
