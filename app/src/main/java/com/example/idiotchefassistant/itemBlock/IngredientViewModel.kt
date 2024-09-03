@@ -8,11 +8,18 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
     private var userLiveData = MutableLiveData<IngredientData>()
 
     fun callBack(): LiveData<IngredientData> {
-        ingredientRepository.loadIngredient(object : OnTaskFinish {
+        ingredientRepository.loadData(object : OnTaskFinish {
             override fun onFinish(data: IngredientData) {
                 userLiveData.postValue(data)
             }
         })
         return userLiveData
+    }
+
+    fun filterItems(query: String) {
+        val allItems = ingredientRepository.getDatas()
+        val data = IngredientData()
+        data.ingredientNames = allItems.filter { it.contains(query, ignoreCase = true) }.toTypedArray()
+        userLiveData.postValue(data)
     }
 }

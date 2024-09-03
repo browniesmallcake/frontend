@@ -85,7 +85,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener {
                 else {
                     resultViewModel.deleteData(item.Title)
                 }
-                adapter.updateItems(resultRepository.getNowResults()?.map { ResultItem(it.value, it.key) } ?: emptyList())
+                adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
                 adapter.notifyDataSetChanged()
             }
             .setNegativeButton("No", null)

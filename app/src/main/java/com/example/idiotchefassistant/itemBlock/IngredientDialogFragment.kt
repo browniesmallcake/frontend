@@ -1,6 +1,8 @@
 package com.example.idiotchefassistant.itemBlock
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +25,7 @@ class IngredientDialogFragment : DialogFragment() {
     ): View {
         _binding = FragmentIngredientDialogBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.searchEditText
+
         binding.listViewItems
         // Set up the list and adapter
         ingredientRepository = IngredientRepository()
@@ -34,6 +36,21 @@ class IngredientDialogFragment : DialogFragment() {
             val items = it.ingredientNames?: emptyArray()
             binding.listViewItems.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
         })
+
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString()
+                ingredientViewModel.filterItems(query)
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.buttonCancel.setOnClickListener { dismiss() }
+        binding.buttonConfirm.setOnClickListener {
+            // Handle confirmation logic
+            dismiss()
+        }
 
         binding.buttonCancel.setOnClickListener { dismiss() }
         binding.buttonConfirm.setOnClickListener {

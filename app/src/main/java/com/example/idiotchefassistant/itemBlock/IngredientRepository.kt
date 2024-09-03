@@ -3,13 +3,22 @@ package com.example.idiotchefassistant.itemBlock
 import java.util.concurrent.Executors
 
 class IngredientRepository {
-    fun loadIngredient(task: OnTaskFinish) {
+    private var nowDatas = arrayOf("beef", "chicken", "pork", "tomato", "banana", "potato", "egg")
+    fun loadData(task: OnTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
             val ingredients = IngredientData()
-            ingredients.ingredientNames = arrayOf("beef", "chicken", "pork", "tomato", "banana", "potato", "egg")
-            Thread.sleep(500)
+            ingredients.ingredientNames = nowDatas
+//            Thread.sleep(500)
             task.onFinish(ingredients)
         }
+    }
+
+    fun getDatas(): Array<String> {
+        return nowDatas
+    }
+
+    fun setData(newData: Array<String>) {
+        nowDatas = newData
     }
 }
 

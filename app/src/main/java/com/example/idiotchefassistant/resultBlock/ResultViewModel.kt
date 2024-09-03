@@ -16,7 +16,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     private var userLiveData = MutableLiveData<ResultData>()
 
     fun callBack():LiveData<ResultData>{
-        resultRepository.loadResult(object: OnTaskFinish{
+        resultRepository.loadData(object: OnTaskFinish{
             override fun onFinish(data: ResultData){
                 userLiveData.postValue(data)
             }
@@ -25,17 +25,17 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun addData(title: String, image: String) {
-        val currentMap = resultRepository.getNowResults()?.toMutableMap() ?: mutableMapOf()
+        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: mutableMapOf()
         if (currentMap.containsKey(title)) {
             currentMap[title]?.add(image)
         } else {
             currentMap[title] = arrayListOf(image)
         }
-        resultRepository.uploadResult(currentMap)
+        resultRepository.uploadData(currentMap)
     }
 
     fun deleteData(title: String, image: String? = null) {
-        val currentMap = resultRepository.getNowResults()?.toMutableMap() ?: return
+        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: return
 
         if (image == null) {
             currentMap.remove(title)
@@ -45,11 +45,11 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                 currentMap.remove(title)
             }
         }
-        resultRepository.uploadResult(currentMap)
+        resultRepository.uploadData(currentMap)
     }
 
     fun findData(item: String):Boolean {
-        val currentMap = resultRepository.getNowResults()
+        val currentMap = resultRepository.getDatas()
         return currentMap?.containsKey(item) == true
     }
 
@@ -63,7 +63,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                 if(response.isSuccessful) {
                     val map = response.body()
                     Log.i("onResponse2","OK")
-                    resultRepository.uploadResult(map?: emptyMap())
+                    resultRepository.uploadData(map?: emptyMap())
 //                    callBack()
                 }
             }
