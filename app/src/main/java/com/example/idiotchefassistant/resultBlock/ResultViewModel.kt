@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.resultBlock
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -62,7 +63,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         return currentMap?.containsKey(item) == true
     }
 
-    fun uploadVideo(video: String?){
+    fun uploadVideo(context: Context, video: String?){
         // upload video
         val videoFile = File(video.toString())
         val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)

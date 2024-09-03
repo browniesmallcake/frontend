@@ -34,7 +34,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
 
         val video = intent.getStringExtra("videoUri")
-        resultViewModel.uploadVideo(video)
+        resultViewModel.uploadVideo(this, video)
 
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients
@@ -79,27 +79,30 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
     }
 
     override fun onItemSelected(itemName: String?) {
-        if (isEditMode) {
-            if(resultViewModel.findData(itemName ?: "")){
-                AlertDialog.Builder(this)
-                    .setTitle("Item Is Exist Already")
-                    .setMessage("The item \"${itemName}\" does exist in the list.")
-                    .setPositiveButton("OK", null)
-                    .show()
-            }
-            else {
-                resultViewModel.editData(editItemTitle!!, itemName ?: "")
-            }
-        } else {
-            if(resultViewModel.findData(itemName ?: "")){
-            AlertDialog.Builder(this)
-                .setTitle("Item Is Exist Already")
-                .setMessage("The item \"${itemName}\" does exist in the list.")
-                .setPositiveButton("OK", null)
-                .show()
-            }
-            else {
-                resultViewModel.addData(itemName ?: "", "app/src/main/res/drawable/logo.png") // Pass the image path here
+        if (itemName != null) {
+            if (isEditMode) {
+                if (resultViewModel.findData(itemName)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Item Exist Already")
+                        .setMessage("The item \"${itemName}\" does exist in the list.")
+                        .setPositiveButton("OK", null)
+                        .show()
+                } else {
+                    resultViewModel.editData(editItemTitle!!, itemName)
+                }
+            } else {
+                if (resultViewModel.findData(itemName)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Item Exist Already")
+                        .setMessage("The item \"${itemName}\" does exist in the list.")
+                        .setPositiveButton("OK", null)
+                        .show()
+                } else {
+                    resultViewModel.addData(
+                        itemName,
+                        "app/src/main/res/drawable/logo.png"
+                    ) // Pass the image path here
+                }
             }
         }
         adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())

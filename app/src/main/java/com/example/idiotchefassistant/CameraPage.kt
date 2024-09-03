@@ -28,6 +28,7 @@ import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.view.Surface
 
 class CameraPage : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCameraPageBinding
@@ -113,7 +114,7 @@ class CameraPage : AppCompatActivity() {
                             }
 
                             val intent = Intent(this, ResultPage::class.java).apply {
-                                putExtra("videoUri", "${videoFile}")
+                                putExtra("videoUri", videoFile.toString())
                             }
                             startActivity(intent)
                         }
@@ -140,6 +141,7 @@ class CameraPage : AppCompatActivity() {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             // Preview
             val preview = Preview.Builder()
+                .setTargetRotation(Surface.ROTATION_180)
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
