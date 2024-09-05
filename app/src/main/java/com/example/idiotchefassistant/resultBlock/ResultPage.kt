@@ -12,12 +12,18 @@ import androidx.appcompat.app.AlertDialog
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
+import com.example.idiotchefassistant.itemBlock.IngredientFactory
+import com.example.idiotchefassistant.itemBlock.IngredientRepository
+import com.example.idiotchefassistant.itemBlock.IngredientViewModel
 
 class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, IngredientDialogFragment.OnItemSelectedListener {
     private lateinit var binding: ActivityResultPageBinding
     private lateinit var resultViewModel: ResultViewModel
     private lateinit var resultFactory: ResultFactory
     private lateinit var resultRepository: ResultRepository
+    private lateinit var ingredientViewModel:IngredientViewModel
+    private lateinit var ingredientFactory: IngredientFactory
+    private lateinit var ingredientRepository: IngredientRepository
 
     private lateinit var adapter: ResultItemAdapter
     private var isEditMode = false
@@ -32,6 +38,9 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         resultRepository = ResultRepository()
         resultFactory = ResultFactory(resultRepository)
         resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
+        ingredientRepository = IngredientRepository()
+        ingredientFactory = IngredientFactory(ingredientRepository)
+        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
 
         val video = intent.getStringExtra("videoUri")
         resultViewModel.uploadVideo(this, video)
@@ -61,6 +70,8 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             dialog.setOnItemSelectedListener(this)
             isEditMode = false
             dialog.show(supportFragmentManager, "customDialog")
+            ingredientViewModel.callBack()
+            adapter.notifyDataSetChanged()
         }
 
         binding.searchButton.setOnClickListener {
@@ -76,6 +87,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         isEditMode = true
         editItemTitle = item.Title
         dialog.show(supportFragmentManager, "customDialog")
+        ingredientViewModel.callBack()
     }
 
     override fun onItemSelected(itemName: String?) {

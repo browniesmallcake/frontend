@@ -3,6 +3,7 @@ package com.example.idiotchefassistant.itemBlock
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.idiotchefassistant.databinding.FragmentIngredientDialogBinding
+import com.example.idiotchefassistant.resultBlock.ingredientService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class IngredientDialogFragment : DialogFragment() {
     private var _binding: FragmentIngredientDialogBinding? = null
@@ -33,6 +38,7 @@ class IngredientDialogFragment : DialogFragment() {
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
         ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
+
         // Set up the list and adapter
         val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -45,8 +51,9 @@ class IngredientDialogFragment : DialogFragment() {
                 return view
             }
         }
+
         binding.listViewItems.adapter = adapter
-        ingredientViewModel.callBack().observe(this, Observer {
+        ingredientViewModel.ingredientData.observe(this, Observer {
             val items = it.ingredientNames?: emptyArray()
             adapter.clear()
             adapter.addAll(items.toList())

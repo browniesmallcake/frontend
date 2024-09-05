@@ -2,6 +2,7 @@ package com.example.idiotchefassistant
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -9,18 +10,33 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProviders
 import com.example.idiotchefassistant.recipeBlock.HomePage
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
+import com.example.idiotchefassistant.itemBlock.IngredientFactory
+import com.example.idiotchefassistant.itemBlock.IngredientItem
+import com.example.idiotchefassistant.itemBlock.IngredientRepository
+import com.example.idiotchefassistant.itemBlock.IngredientViewModel
+import com.example.idiotchefassistant.resultBlock.ingredientService
 import com.example.idiotchefassistant.ui.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var ingredientViewModel: IngredientViewModel
+    private lateinit var ingredientFactory: IngredientFactory
+    private lateinit var ingredientRepository: IngredientRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ingredientRepository = IngredientRepository()
+        ingredientFactory = IngredientFactory(ingredientRepository)
+        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -42,7 +58,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, HomePage()).commit()
             navigationView.setCheckedItem(R.id.nav_home)
         }
+
+        // get ingredient list
+        ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
+            override fun onResponse(
+                call: Call<ArrayList<IngredientItem>>,
+                response: Response<ArrayList<IngredientItem>>
+            ) {
+                if (response.isSuccessful) {
+                    val list = response.body()
+                    val names: Array<String>? = list?.map { it.name }?.toTypedArray()
+                    Log.i("onResponse3","OK")
+                    if (names != null) {
+                        ingredientViewModel.setData(names)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
+                Log.i("onFailure3",t.toString())
+            }
+
+        })
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main_header, menu)

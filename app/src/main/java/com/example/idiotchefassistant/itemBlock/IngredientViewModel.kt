@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class IngredientViewModel(private var ingredientRepository: IngredientRepository): ViewModel() {
     private var userLiveData = MutableLiveData<IngredientData>()
+    val ingredientData: LiveData<IngredientData> get() = userLiveData
 
     fun callBack(): LiveData<IngredientData> {
         ingredientRepository.loadData(object : OnTaskFinish {
@@ -14,6 +15,13 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
             }
         })
         return userLiveData
+    }
+
+    fun setData(newData: Array<String>) {
+        ingredientRepository.setData(newData)
+        val ingredientData = IngredientData()
+        ingredientData.ingredientNames = newData
+        userLiveData.postValue(ingredientData)
     }
 
     fun filterItems(query: String) {

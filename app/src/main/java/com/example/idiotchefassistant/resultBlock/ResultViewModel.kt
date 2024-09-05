@@ -74,7 +74,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                     val map = response.body()
                     Log.i("onResponse2","OK")
                     resultRepository.uploadData(map?: emptyMap())
-//                    callBack()
+                    callBack()
                 }
             }
             override fun onFailure(call: Call<HashMap<String, ArrayList<String>>>, t: Throwable) {
