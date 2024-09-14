@@ -1,4 +1,5 @@
 package com.example.idiotchefassistant.resultBlock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.concurrent.Executors
@@ -17,6 +18,7 @@ class ResultRepository {
 
     fun uploadData(newResults: Map<String, String>) {
         nowDatas.value = newResults
+        Log.i("image src: ", nowDatas.value.toString())
     }
 
     fun getDatas(): Map<String, String>? {

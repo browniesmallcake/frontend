@@ -3,11 +3,13 @@ package com.example.idiotchefassistant.resultBlock
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.R
-import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding;
+import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding
+import coil.load
 
-class ResultItemAdapter(private var items: kotlin.collections.List<ResultItem>) :
+class ResultItemAdapter(private var items: List<ResultItem>) :
     RecyclerView.Adapter<ResultItemAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
@@ -16,18 +18,26 @@ class ResultItemAdapter(private var items: kotlin.collections.List<ResultItem>) 
         private val editButton: ImageView = itemView.findViewById(R.id.edit_button)
         private val deleteButton: ImageView = itemView.findViewById(R.id.delete_button)
 
-//        init {
-//            binding.root.setOnClickListener{
-//                val position = adapterPosition
-//                if(position != RecyclerView.NO_POSITION){
-//                    val item = items[position]
-//                    itemClickListener?.onItemClick(item)
-//                }
-//            }
-//        }
+        init {
+            binding.root.setOnClickListener{
+                val position = adapterPosition
+                if(position != RecyclerView.NO_POSITION){
+                    val item = items[position]
+                    val imageUrl = "http://120.107.172.139:8000/${item.image}"
+                    val fragment = ImageDetailFragment.newInstance(imageUrl)
+                    fragment.show(
+                        (binding.root.context as AppCompatActivity).supportFragmentManager,
+                        "imageDetail"
+                    )
+                }
+            }
+        }
 
         fun bind(item: ResultItem) {
-            binding.itemTitle.text = item.Title
+            binding.itemTitle.text = item.title
+            // binding image
+            val imageUrl = "http://120.107.172.139:8000/${item.image}"
+            binding.itemImage.load(imageUrl)
             editButton.setOnClickListener {
                 itemClickListener?.onEditClick(item)
             }
@@ -47,8 +57,7 @@ class ResultItemAdapter(private var items: kotlin.collections.List<ResultItem>) 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
-        holder.bind(item)
+        holder.bind(items[position])
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

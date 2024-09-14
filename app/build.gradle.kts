@@ -66,4 +66,6 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.androidx.lifecycle.extensions)
     annotationProcessor(libs.androidx.lifecycle.compiler)
+    // Coil
+    implementation(libs.coil.compose)
 }

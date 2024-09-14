@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
@@ -37,13 +36,13 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         setContentView(binding.root)
         resultRepository = ResultRepository()
         resultFactory = ResultFactory(resultRepository)
-        resultViewModel = ViewModelProviders.of(this, resultFactory).get(ResultViewModel::class.java)
+        resultViewModel = ViewModelProviders.of(this, resultFactory)[ResultViewModel::class.java]
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
-        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
+        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory)[IngredientViewModel::class.java]
 
         val video = intent.getStringExtra("videoUri")
-        resultViewModel.uploadVideo(this, video)
+        resultViewModel.uploadVideo(video)
 
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients
@@ -51,7 +50,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         adapter = ResultItemAdapter(emptyList())
         adapter.setOnItemClickListener(this)
         recyclerView.adapter = adapter
-        resultViewModel.callBack().observe(this, Observer {
+        resultViewModel.callBack().observe(this) {
             val dialog = ProgressDialog.show(
                 this, "",
                 "Loading. Please wait...", true
@@ -61,9 +60,8 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                 ResultItem(entry.value, entry.key)
             } ?: emptyList()
             adapter.updateItems(items)
-//            if(!resultRepository.getDatas()?.isEmpty()!!)
-                dialog.dismiss()
-        })
+            dialog.dismiss()
+        }
 
         binding.addButton.setOnClickListener {
             val dialog = IngredientDialogFragment()
@@ -85,7 +83,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         val dialog = IngredientDialogFragment()
         dialog.setOnItemSelectedListener(this)
         isEditMode = true
-        editItemTitle = item.Title
+        editItemTitle = item.title
         dialog.show(supportFragmentManager, "customDialog")
         ingredientViewModel.callBack()
     }
@@ -125,15 +123,15 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             .setTitle("Confirm Delete")
             .setMessage("Are you sure you want to delete this item?")
             .setPositiveButton("Yes") { _, _ ->
-                if(!resultViewModel.findData(item.Title)){
+                if(!resultViewModel.findData(item.title)){
                     AlertDialog.Builder(this)
                     .setTitle("Item Not Found")
-                    .setMessage("The item \"${item.Title}\" does not exist in the list.")
+                    .setMessage("The item \"${item.title}\" does not exist in the list.")
                     .setPositiveButton("OK", null)
                     .show()
                 }
                 else {
-                    resultViewModel.deleteData(item.Title)
+                    resultViewModel.deleteData(item.title)
                 }
                 adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
             }
