@@ -1,3 +1,3 @@
 package com.example.idiotchefassistant.resultBlock
 
-data class ResultItem(val Image:ArrayList<String>, val Title:String)
+data class ResultItem(val Image:String, val Title:String)

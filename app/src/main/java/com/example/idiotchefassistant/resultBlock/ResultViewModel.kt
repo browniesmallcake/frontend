@@ -27,11 +27,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
 
     fun addData(title: String, image: String) {
         val currentMap = resultRepository.getDatas()?.toMutableMap() ?: mutableMapOf()
-        if (currentMap.containsKey(title)) {
-            currentMap[title]?.add(image)
-        } else {
-            currentMap[title] = arrayListOf(image)
-        }
+        currentMap[title] = image
         resultRepository.uploadData(currentMap)
     }
 
@@ -47,13 +43,8 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     fun deleteData(title: String, image: String? = null) {
         val currentMap = resultRepository.getDatas()?.toMutableMap() ?: return
 
-        if (image == null) {
+        if (image == null || currentMap[title] == image) {
             currentMap.remove(title)
-        } else {
-            currentMap[title]?.remove(image)
-            if (currentMap[title].isNullOrEmpty()) {
-                currentMap.remove(title)
-            }
         }
         resultRepository.uploadData(currentMap)
     }
@@ -73,7 +64,10 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                 if(response.isSuccessful) {
                     val map = response.body()
                     Log.i("onResponse2","OK")
-                    resultRepository.uploadData(map?: emptyMap())
+                    val resultMap = map?.mapValues { entry ->
+                        entry.value.lastOrNull()?:""
+                    }?: emptyMap()
+                    resultRepository.uploadData(resultMap)
                     callBack()
                 }
             }

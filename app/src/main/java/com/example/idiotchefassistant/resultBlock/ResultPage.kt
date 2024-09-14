@@ -51,18 +51,18 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         adapter = ResultItemAdapter(emptyList())
         adapter.setOnItemClickListener(this)
         recyclerView.adapter = adapter
-
-        val dialog = ProgressDialog.show(
-            this, "",
-            "Loading. Please wait...", true
-        )
-        dialog.show()
         resultViewModel.callBack().observe(this, Observer {
-            dialog.dismiss()
+            val dialog = ProgressDialog.show(
+                this, "",
+                "Loading. Please wait...", true
+            )
+            dialog.show()
             val items = it.result?.map { entry ->
                 ResultItem(entry.value, entry.key)
             } ?: emptyList()
             adapter.updateItems(items)
+//            if(!resultRepository.getDatas()?.isEmpty()!!)
+                dialog.dismiss()
         })
 
         binding.addButton.setOnClickListener {
@@ -118,7 +118,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             }
         }
         adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
-        adapter.notifyDataSetChanged()
     }
 
     override fun onDeleteClick(item: ResultItem) {
@@ -137,7 +136,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                     resultViewModel.deleteData(item.Title)
                 }
                 adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
-                adapter.notifyDataSetChanged()
             }
             .setNegativeButton("No", null)
             .show()

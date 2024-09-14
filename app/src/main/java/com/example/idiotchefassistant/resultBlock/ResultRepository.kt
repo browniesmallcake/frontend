@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import java.util.concurrent.Executors
 
 class ResultRepository {
-    private var nowDatas: MutableLiveData<Map<String, ArrayList<String>>> = MutableLiveData(emptyMap())
-    fun loadData(task: OnTaskFinish): LiveData<Map<String, ArrayList<String>>> {
+    private var nowDatas: MutableLiveData<Map<String, String>> = MutableLiveData(emptyMap())
+    fun loadData(task: OnTaskFinish): LiveData<Map<String, String>> {
         Executors.newSingleThreadExecutor().submit {
             val results = ResultData()
             results.result = nowDatas.value
@@ -15,11 +15,11 @@ class ResultRepository {
         return nowDatas
     }
 
-    fun uploadData(newResults: Map<String, ArrayList<String>>) {
+    fun uploadData(newResults: Map<String, String>) {
         nowDatas.value = newResults
     }
 
-    fun getDatas(): Map<String, ArrayList<String>>? {
+    fun getDatas(): Map<String, String>? {
         return nowDatas.value
     }
 
