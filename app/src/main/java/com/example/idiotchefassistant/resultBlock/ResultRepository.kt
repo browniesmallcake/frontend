@@ -18,7 +18,7 @@ class ResultRepository {
 
     fun uploadData(newResults: Map<String, String>) {
         nowDatas.value = newResults
-        Log.i("image src: ", nowDatas.value.toString())
+        Log.i("ingredients name: ", newResults.keys.toString())
     }
 
     fun getDatas(): Map<String, String>? {
