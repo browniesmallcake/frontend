@@ -3,7 +3,6 @@ package com.example.idiotchefassistant.itemBlock
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.idiotchefassistant.databinding.FragmentIngredientDialogBinding
-import com.example.idiotchefassistant.resultBlock.ingredientService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class IngredientDialogFragment : DialogFragment() {
     private var _binding: FragmentIngredientDialogBinding? = null
@@ -40,6 +35,7 @@ class IngredientDialogFragment : DialogFragment() {
         ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
 
         // Set up the list and adapter
+        ingredientViewModel.getData()
         val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
@@ -53,8 +49,8 @@ class IngredientDialogFragment : DialogFragment() {
         }
 
         binding.listViewItems.adapter = adapter
-        ingredientViewModel.ingredientData.observe(this, Observer {
-            val items = it.ingredientNames?: emptyArray()
+        ingredientViewModel.callBack().observe(viewLifecycleOwner, Observer { ingredientData ->
+            val items = ingredientData.ingredientNames?: emptyArray()
             adapter.clear()
             adapter.addAll(items.toList())
             adapter.notifyDataSetChanged()
@@ -66,8 +62,10 @@ class IngredientDialogFragment : DialogFragment() {
         }
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                adapter.notifyDataSetChanged()
                 val query = s.toString()
                 ingredientViewModel.filterItems(query)
             }

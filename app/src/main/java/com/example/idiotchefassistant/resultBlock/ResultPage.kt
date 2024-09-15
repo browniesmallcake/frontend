@@ -68,7 +68,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             dialog.setOnItemSelectedListener(this)
             isEditMode = false
             dialog.show(supportFragmentManager, "customDialog")
-            ingredientViewModel.callBack()
             adapter.notifyDataSetChanged()
         }
 
@@ -85,7 +84,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         isEditMode = true
         editItemTitle = item.title
         dialog.show(supportFragmentManager, "customDialog")
-        ingredientViewModel.callBack()
     }
 
     override fun onItemSelected(itemName: String?) {

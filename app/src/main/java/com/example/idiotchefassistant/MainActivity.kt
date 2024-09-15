@@ -58,28 +58,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, HomePage()).commit()
             navigationView.setCheckedItem(R.id.nav_home)
         }
-
-        // get ingredient list
-        ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
-            override fun onResponse(
-                call: Call<ArrayList<IngredientItem>>,
-                response: Response<ArrayList<IngredientItem>>
-            ) {
-                if (response.isSuccessful) {
-                    val list = response.body()
-                    val names: Array<String>? = list?.map { it.name }?.toTypedArray()
-                    Log.i("onResponse3","OK")
-                    if (names != null) {
-                        ingredientViewModel.setData(names)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
-                Log.i("onFailure3",t.toString())
-            }
-
-        })
     }
 
 
