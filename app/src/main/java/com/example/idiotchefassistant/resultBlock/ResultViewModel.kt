@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.idiotchefassistant.itemBlock.IngredientItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -66,8 +67,35 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                     val resultMap = map?.mapValues { entry ->
                         entry.value.lastOrNull()?:""
                     }?: emptyMap()
-                    resultRepository.uploadData(resultMap)
-                    callBack()
+                    // get ingredient list
+                    ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
+                        override fun onResponse(
+                            call: Call<ArrayList<IngredientItem>>,
+                            response: Response<ArrayList<IngredientItem>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val list = response.body()
+                                val names: Array<String>? = list?.map { it.name }?.toTypedArray()
+                                val mandarins: Array<String>? = list?.map { it.mandarin }?.toTypedArray()
+                                Log.i("onResponse3", "OK")
+                                val updateMap = resultMap.mapKeys { entry ->
+                                    val newKey = entry.key.replace("_", " ")
+                                    val index = names?.indexOfFirst { it.equals(newKey, ignoreCase = true) }
+                                    if (index != -1) {
+                                        "${index?.let { mandarins?.get(it) }} ${index?.let { names[it] }}"
+                                    }
+                                    else {
+                                        newKey
+                                    }
+                                }
+                                resultRepository.uploadData(updateMap)
+                                callBack()
+                            }
+                        }
+                        override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
+                            Log.i("onFailure3",t.toString())
+                        }
+                    })
                 }
             }
             override fun onFailure(call: Call<HashMap<String, ArrayList<String>>>, t: Throwable) {
