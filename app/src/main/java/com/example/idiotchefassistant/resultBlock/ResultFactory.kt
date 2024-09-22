@@ -1,14 +1,15 @@
 package com.example.idiotchefassistant.resultBlock
 
-import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class ResultFactory(val resultRepository: ResultRepository): ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(@NonNull modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(ResultViewModel::class.java)){
-            return ResultViewModel(resultRepository) as T
+class ResultFactory(private val resultRepository: ResultRepository): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return if(modelClass.isAssignableFrom(ResultViewModel::class.java)){
+            @Suppress("UNCHECKED_CAST")
+            ResultViewModel(resultRepository) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
-        throw IllegalArgumentException("Unknow ViewModel class")
     }
 }

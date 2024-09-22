@@ -5,10 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.ViewModelProvider
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
@@ -38,10 +37,10 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         setContentView(binding.root)
         resultRepository = ResultRepository()
         resultFactory = ResultFactory(resultRepository)
-        resultViewModel = ViewModelProviders.of(this, resultFactory)[ResultViewModel::class.java]
+        resultViewModel = ViewModelProvider(this, resultFactory)[ResultViewModel::class.java]
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
-        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory)[IngredientViewModel::class.java]
+        ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
         val video = intent.getStringExtra("videoUri")
         resultViewModel.uploadVideo(video)

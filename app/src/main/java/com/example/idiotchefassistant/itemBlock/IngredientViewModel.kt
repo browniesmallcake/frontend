@@ -39,7 +39,7 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
     }
 
     fun filterItems(query: String) {
-        val allItems = ingredientRepository.getDatas()
+        val allItems = ingredientRepository.getData()
         val data = IngredientData()
         data.ingredientNames = allItems.filter { it.contains(query, ignoreCase = true) }.toTypedArray()
         userLiveData.postValue(data)
