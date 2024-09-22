@@ -56,7 +56,7 @@ class CameraPage : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    // Implaements VideoCapture use case, including start nd stop capturing.
+    // Implements VideoCapture use case, including start nd stop capturing.
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return // 如果未建立，則不執行
 
@@ -106,7 +106,6 @@ class CameraPage : AppCompatActivity() {
                             files?.forEach {
                                 Log.d(TAG, "File in cache: ${it.name} - Size: ${it.length()} bytes")
                             }
-                            val videoFile = File(cacheDir, "${name}.mp4")
                             if (files?.contains(videoFile) == true) {
                                 Log.d(TAG, "Video file ${videoFile.name} found in cache.")
                             } else {

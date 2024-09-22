@@ -30,13 +30,13 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun addData(title: String, image: String) {
-        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: mutableMapOf()
+        val currentMap = resultRepository.getData()?.toMutableMap() ?: mutableMapOf()
         currentMap[title] = image
         resultRepository.uploadData(currentMap)
     }
 
     fun editData(oldTitle: String, newTitle: String) {
-        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: mutableMapOf()
+        val currentMap = resultRepository.getData()?.toMutableMap() ?: mutableMapOf()
         val images = currentMap.remove(oldTitle)
         if (images != null) {
             currentMap[newTitle] = images
@@ -45,7 +45,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun deleteData(title: String, image: String? = null) {
-        val currentMap = resultRepository.getDatas()?.toMutableMap() ?: return
+        val currentMap = resultRepository.getData()?.toMutableMap() ?: return
 
         if (image == null || currentMap[title] == image) {
             currentMap.remove(title)
@@ -54,7 +54,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun findData(item: String):Boolean {
-        val currentMap = resultRepository.getDatas()
+        val currentMap = resultRepository.getData()
         return currentMap?.containsKey(item) == true
     }
 
@@ -63,8 +63,8 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         // upload video
         val videoFile = File(video.toString())
         val requestFile = videoFile.asRequestBody(MultipartBody.FORM)
-        val fbody = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
-        detectService.detect(fbody).enqueue(object : Callback<HashMap<String, ArrayList<String>>> {
+        val body = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
+        detectService.detect(body).enqueue(object : Callback<HashMap<String, ArrayList<String>>> {
             override fun onResponse(call: Call<HashMap<String, ArrayList<String>>>, response: Response<HashMap<String, ArrayList<String>>>) {
                 if(response.isSuccessful) {
                     val map = response.body()

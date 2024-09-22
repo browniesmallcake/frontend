@@ -13,12 +13,12 @@ val okHttpClient = OkHttpClient.Builder()
     .writeTimeout(60, TimeUnit.SECONDS)   // 設置寫入超時時間
     .build()
 
-var retrofit = Retrofit.Builder()
+var retrofit: Retrofit = Retrofit.Builder()
     .baseUrl("https://topic114.bntw.dev/")
     .addConverterFactory(GsonConverterFactory.create())
     .client(okHttpClient)
     .build()
 
-val detectService = retrofit.create(DetectAPI::class.java)
+val detectService: DetectAPI = retrofit.create(DetectAPI::class.java)
 
-val ingredientService = retrofit.create(IngredientAPI::class.java)
+val ingredientService: IngredientAPI = retrofit.create(IngredientAPI::class.java)

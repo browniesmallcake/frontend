@@ -1,8 +1,9 @@
 package com.example.idiotchefassistant.resultBlock
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
     private lateinit var ingredientViewModel:IngredientViewModel
     private lateinit var ingredientFactory: IngredientFactory
     private lateinit var ingredientRepository: IngredientRepository
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var progressDialog: AlertDialog
 
     private lateinit var adapter: ResultItemAdapter
     private var isEditMode = false
@@ -57,15 +58,12 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             } ?: emptyList()
             adapter.updateItems(items)
         }
-        progressDialog = ProgressDialog(this).apply {
-            setMessage("Uploading video...")
-            setCancelable(false)
-        }
+
         resultViewModel.isUploading.observe(this) { isUploading ->
             if (isUploading) {
-                progressDialog.show()
+                showProgressDialog()
             } else {
-                progressDialog.dismiss()
+                hideProgressDialog()
             }
         }
         resultViewModel.uploadResult.observe(this) { isSuccess ->
@@ -83,7 +81,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             dialog.setOnItemSelectedListener(this)
             isEditMode = false
             dialog.show(supportFragmentManager, "customDialog")
-            adapter.notifyDataSetChanged()
         }
 
         binding.searchButton.setOnClickListener {
@@ -128,7 +125,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                 }
             }
         }
-        adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
+        adapter.updateItems(resultRepository.getData()?.map { ResultItem(it.value, it.key) } ?: emptyList())
     }
 
     override fun onDeleteClick(item: ResultItem) {
@@ -146,10 +143,35 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                 else {
                     resultViewModel.deleteData(item.title)
                 }
-                adapter.updateItems(resultRepository.getDatas()?.map { ResultItem(it.value, it.key) } ?: emptyList())
+                adapter.updateItems(resultRepository.getData()?.map { ResultItem(it.value, it.key) } ?: emptyList())
             }
             .setNegativeButton("No", null)
             .show()
     }
+
+    private fun showProgressDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Uploading Video")
+
+        val progressBar = ProgressBar(this)
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        progressBar.layoutParams = params
+
+        builder.setView(progressBar)
+        builder.setCancelable(false) // 阻止取消 dialog
+
+        progressDialog = builder.create()
+        progressDialog.show()
+    }
+
+    private fun hideProgressDialog() {
+        if (this::progressDialog.isInitialized && progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
+    }
+
 }
 
