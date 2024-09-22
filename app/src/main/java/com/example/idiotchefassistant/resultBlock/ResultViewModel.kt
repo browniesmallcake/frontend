@@ -15,6 +15,10 @@ import com.example.idiotchefassistant.resultBlock.ResultRepository.OnTaskFinish
 
 class ResultViewModel(private var resultRepository: ResultRepository): ViewModel() {
     private var userLiveData = MutableLiveData<ResultData>()
+    private val _isUploading = MutableLiveData<Boolean>()
+    val isUploading: LiveData<Boolean> get() = _isUploading
+    private val _uploadResult = MutableLiveData<Boolean>()
+    val uploadResult: LiveData<Boolean> get() = _uploadResult
 
     fun callBack():LiveData<ResultData>{
         resultRepository.loadData(object: OnTaskFinish{
@@ -55,6 +59,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun uploadVideo(video: String?){
+        _isUploading.postValue(true)
         // upload video
         val videoFile = File(video.toString())
         val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
@@ -89,17 +94,26 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                                     }
                                 }
                                 resultRepository.uploadData(updateMap)
+                                _uploadResult.postValue(true)
                                 callBack()
                             }
+                            else {
+                                _uploadResult.postValue(false)
+                            }
+                            _isUploading.postValue(false)
                         }
                         override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
                             Log.i("onFailure3",t.toString())
+                            _uploadResult.postValue(false)
+                            _isUploading.postValue(false)
                         }
                     })
                 }
             }
             override fun onFailure(call: Call<HashMap<String, ArrayList<String>>>, t: Throwable) {
                 Log.i("onFailure2",t.toString())
+                _uploadResult.postValue(false)
+                _isUploading.postValue(false)
             }
         })
     }

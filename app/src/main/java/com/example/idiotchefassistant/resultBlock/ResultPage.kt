@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
 import com.example.idiotchefassistant.recipeBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
@@ -23,6 +24,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
     private lateinit var ingredientViewModel:IngredientViewModel
     private lateinit var ingredientFactory: IngredientFactory
     private lateinit var ingredientRepository: IngredientRepository
+    private lateinit var progressDialog: ProgressDialog
 
     private lateinit var adapter: ResultItemAdapter
     private var isEditMode = false
@@ -51,16 +53,30 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         adapter.setOnItemClickListener(this)
         recyclerView.adapter = adapter
         resultViewModel.callBack().observe(this) {
-            val dialog = ProgressDialog.show(
-                this, "",
-                "Loading. Please wait...", true
-            )
-            dialog.show()
             val items = it.result?.map { entry ->
                 ResultItem(entry.value, entry.key)
             } ?: emptyList()
             adapter.updateItems(items)
-            dialog.dismiss()
+        }
+        progressDialog = ProgressDialog(this).apply {
+            setMessage("Uploading video...")
+            setCancelable(false)
+        }
+        resultViewModel.isUploading.observe(this) { isUploading ->
+            if (isUploading) {
+                progressDialog.show()
+            } else {
+                progressDialog.dismiss()
+            }
+        }
+        resultViewModel.uploadResult.observe(this) { isSuccess ->
+            if (!isSuccess) {
+                AlertDialog.Builder(this)
+                    .setTitle("Upload Failed")
+                    .setMessage("The video upload failed, please try again.")
+                    .setPositiveButton("OK", null)
+                    .show()
+            }
         }
 
         binding.addButton.setOnClickListener {
