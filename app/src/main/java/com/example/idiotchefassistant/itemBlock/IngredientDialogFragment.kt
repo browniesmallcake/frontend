@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.example.idiotchefassistant.databinding.FragmentIngredientDialogBinding
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 
 class IngredientDialogFragment : DialogFragment() {
     private var _binding: FragmentIngredientDialogBinding? = null
@@ -32,29 +32,32 @@ class IngredientDialogFragment : DialogFragment() {
         binding.listViewItems
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
-        ingredientViewModel = ViewModelProviders.of(this, ingredientFactory).get(IngredientViewModel::class.java)
+        ingredientViewModel = ViewModelProvider(
+            this,
+            ingredientFactory
+        )[IngredientViewModel::class.java]
 
         // Set up the list and adapter
         ingredientViewModel.getData()
         val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = super.getView(position, convertView, parent)
+                val v = super.getView(position, convertView, parent)
                 if (position == selectedPosition) {
-                    view.setBackgroundColor(resources.getColor(android.R.color.holo_orange_light))
+                    v.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_orange_light))
                 } else {
-                    view.setBackgroundColor(resources.getColor(android.R.color.transparent))
+                    v.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
                 }
-                return view
+                return v
             }
         }
 
         binding.listViewItems.adapter = adapter
-        ingredientViewModel.callBack().observe(viewLifecycleOwner, Observer { ingredientData ->
-            val items = ingredientData.ingredientNames?: emptyArray()
+        ingredientViewModel.callBack().observe(viewLifecycleOwner) { ingredientData ->
+            val items = ingredientData.ingredientNames ?: emptyArray()
             adapter.clear()
             adapter.addAll(items.toList())
             adapter.notifyDataSetChanged()
-        })
+        }
         binding.listViewItems.setOnItemClickListener { _, _, position, _ ->
             selectedPosition = position
             selectedItemName = adapter.getItem(position)

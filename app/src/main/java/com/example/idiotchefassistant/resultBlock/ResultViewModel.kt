@@ -6,12 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.idiotchefassistant.itemBlock.IngredientItem
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import com.example.idiotchefassistant.resultBlock.ResultRepository.OnTaskFinish
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class ResultViewModel(private var resultRepository: ResultRepository): ViewModel() {
     private var userLiveData = MutableLiveData<ResultData>()
@@ -62,7 +62,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         _isUploading.postValue(true)
         // upload video
         val videoFile = File(video.toString())
-        val requestFile = RequestBody.create(MultipartBody.FORM, videoFile)
+        val requestFile = videoFile.asRequestBody(MultipartBody.FORM)
         val fbody = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
         detectService.detect(fbody).enqueue(object : Callback<HashMap<String, ArrayList<String>>> {
             override fun onResponse(call: Call<HashMap<String, ArrayList<String>>>, response: Response<HashMap<String, ArrayList<String>>>) {
