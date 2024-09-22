@@ -14,7 +14,7 @@ val okHttpClient = OkHttpClient.Builder()
     .build()
 
 var retrofit = Retrofit.Builder()
-    .baseUrl("http://120.107.172.139:8000/")
+    .baseUrl("https://topic114.bntw.dev/")
     .addConverterFactory(GsonConverterFactory.create())
     .client(okHttpClient)
     .build()
