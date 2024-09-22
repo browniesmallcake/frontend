@@ -68,4 +68,7 @@ dependencies {
     annotationProcessor(libs.androidx.lifecycle.compiler)
     // Coil
     implementation(libs.coil.compose)
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 }

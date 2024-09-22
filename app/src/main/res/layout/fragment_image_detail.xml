@@ -7,10 +7,20 @@
     android:orientation="vertical"
     tools:context=".resultBlock.ImageDetailFragment">
 
-    <ImageView
-    android:id="@+id/fullImageView"
+    <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/viewPager"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:scaleType="centerInside" />
+
+    <TextView
+        android:id="@+id/imagePositionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:padding="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="1/1" />
 
 </FrameLayout>

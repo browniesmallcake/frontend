@@ -29,7 +29,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         return userLiveData
     }
 
-    fun addData(title: String, image: String) {
+    fun addData(title: String, image: ArrayList<String>) {
         val currentMap = resultRepository.getData()?.toMutableMap() ?: mutableMapOf()
         currentMap[title] = image
         resultRepository.uploadData(currentMap)
@@ -44,7 +44,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         }
     }
 
-    fun deleteData(title: String, image: String? = null) {
+    fun deleteData(title: String, image: ArrayList<String>? = null) {
         val currentMap = resultRepository.getData()?.toMutableMap() ?: return
 
         if (image == null || currentMap[title] == image) {
@@ -69,9 +69,6 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                 if(response.isSuccessful) {
                     val map = response.body()
                     Log.i("onResponse2","OK")
-                    val resultMap = map?.mapValues { entry ->
-                        entry.value.lastOrNull()?:""
-                    }?: emptyMap()
                     // get ingredient list
                     ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
                         override fun onResponse(
@@ -83,9 +80,10 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                                 val names: Array<String>? = list?.map { it.name }?.toTypedArray()
                                 val mandarins: Array<String>? = list?.map { it.mandarin }?.toTypedArray()
                                 Log.i("onResponse3", "OK")
-                                val updateMap = resultMap.mapKeys { entry ->
-                                    val newKey = entry.key.replace("_", " ")
+                                val updateMap = map?.mapKeys { entry ->
+                                    val newKey = entry.key
                                     val index = names?.indexOfFirst { it.equals(newKey, ignoreCase = true) }
+                                    newKey.replace("_"," ")
                                     if (index != -1) {
                                         "${index?.let { mandarins?.get(it) }} ${index?.let { names[it] }}"
                                     }
@@ -93,7 +91,12 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                                         newKey
                                     }
                                 }
-                                resultRepository.uploadData(updateMap)
+                                val updateMapKotlin: Map<String, ArrayList<String>> = updateMap
+                                    ?.mapValues { entry ->
+                                        entry.value.toList().toCollection(ArrayList())
+                                    }
+                                    ?: emptyMap()
+                                resultRepository.uploadData(updateMapKotlin)
                                 _uploadResult.postValue(true)
                                 callBack()
                             }

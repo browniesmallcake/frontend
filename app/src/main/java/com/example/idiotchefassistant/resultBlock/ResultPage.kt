@@ -120,7 +120,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                 } else {
                     resultViewModel.addData(
                         itemName,
-                        "app/src/main/res/drawable/logo.png"
+                        arrayListOf("app/src/main/res/drawable/logo.png")
                     ) // Pass the image path here
                 }
             }

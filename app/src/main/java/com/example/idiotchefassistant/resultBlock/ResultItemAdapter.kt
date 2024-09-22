@@ -23,8 +23,8 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
                 val position = adapterPosition
                 if(position != RecyclerView.NO_POSITION){
                     val item = items[position]
-                    val imageUrl = "https://topic114.bntw.dev/${item.image}"
-                    val fragment = ImageDetailFragment.newInstance(imageUrl)
+                    val imageUrls = item.image.map { "https://topic114.bntw.dev/$it" } as ArrayList<String>
+                    val fragment = ImageDetailFragment.newInstance(imageUrls)
                     fragment.show(
                         (binding.root.context as AppCompatActivity).supportFragmentManager,
                         "imageDetail"
@@ -36,7 +36,7 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
         fun bind(item: ResultItem) {
             binding.itemTitle.text = item.title
             // binding image
-            val imageUrl = "https://topic114.bntw.dev/${item.image}"
+            val imageUrl = "https://topic114.bntw.dev/${item.image.firstOrNull()}"
             binding.itemImage.load(imageUrl)
             editButton.setOnClickListener {
                 itemClickListener?.onEditClick(item)
