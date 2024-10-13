@@ -42,4 +42,9 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="upload_image">Upload</string>
+    <string name="Confirm">確認</string>
+    <string name="Cancel">取消</string>
+    <string name="enter_the_ingredient">Enter the ingredient</string>
+    <string name="find_ingred">尋找調味料</string>
 </resources>

@@ -6,8 +6,8 @@ import retrofit2.http.Part
 
 interface DetectAPI {
     @Multipart
-    @POST("/detect/latest/video")
+    @POST("/detect/latest/img")
     fun detect(
-        @Part("") video: MultipartBody.Part
-    ): Call<HashMap<String,ArrayList<String>>>
+        @Part("") image: MultipartBody.Part
+    ): Call<HashMap<String,String>>
 }

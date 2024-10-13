@@ -10,10 +10,12 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="203dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <Button
-        android:id="@+id/video_capture_button"
+        android:id="@+id/capture_button"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginBottom="36dp"
@@ -23,6 +25,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/upload_button"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="36dp"
+        android:elevation="2dp"
+        android:text="@string/upload_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/capture_button" />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/vertical_centerline"
         android:layout_width="wrap_content"

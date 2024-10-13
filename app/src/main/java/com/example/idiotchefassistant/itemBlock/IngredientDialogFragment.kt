@@ -21,6 +21,7 @@ class IngredientDialogFragment : DialogFragment() {
     private var selectedPosition: Int? = null
     private var selectedItemName: String? = null
     private var listener: OnItemSelectedListener? = null
+    private var isSeason = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +59,16 @@ class IngredientDialogFragment : DialogFragment() {
             adapter.addAll(items.toList())
             adapter.notifyDataSetChanged()
         }
+
+        binding.buttonSwitch.setOnClickListener{
+            isSeason = !isSeason
+            if(isSeason)
+                binding.buttonSwitch.text = "尋找食材"
+            else
+                binding.buttonSwitch.text = "尋找調味料"
+            ingredientViewModel.switchData(isSeason)
+        }
+
         binding.listViewItems.setOnItemClickListener { _, _, position, _ ->
             selectedPosition = position
             selectedItemName = adapter.getItem(position)

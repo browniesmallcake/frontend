@@ -43,8 +43,11 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         ingredientFactory = IngredientFactory(ingredientRepository)
         ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
-        val video = intent.getStringExtra("videoUri")
-        resultViewModel.uploadVideo(video)
+//        val video = intent.getStringExtra("videoUri")
+//        resultViewModel.uploadVideo(video)
+
+        val photos = intent.getStringArrayListExtra("photoFilePaths")
+        resultViewModel.uploadPhotos(photos)
 
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients

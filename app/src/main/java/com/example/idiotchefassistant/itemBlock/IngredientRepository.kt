@@ -1,10 +1,11 @@
 package com.example.idiotchefassistant.itemBlock
 
-import android.util.Log
 import java.util.concurrent.Executors
 
 class IngredientRepository {
-    private var nowData = emptyArray<String>()
+    private var ingredientList  = emptyArray<String>()
+    private var seasoningList   = arrayOf("醬油 soy oil", "番茄醬 ketchup")
+    private var nowData = ingredientList
     private val listeners = mutableListOf<OnTaskFinish>()
 
     fun loadData(task: OnTaskFinish) {
@@ -13,17 +14,25 @@ class IngredientRepository {
             val ingredients = IngredientData()
             ingredients.ingredientNames = nowData
             task.onFinish(ingredients)
-            Log.i("ingredients name in repository: ", nowData.joinToString(", "))
         }
     }
     fun getData(): Array<String> {
         return nowData
     }
-    fun setData(newData: Array<String>) {
-        nowData = newData
+    fun setData(newData: Array<String>, isSeason: Boolean = false) {
+        if(isSeason)
+            seasoningList = newData
+        else
+            ingredientList = newData
+        nowData = if(isSeason) seasoningList else ingredientList
         notifyListeners()
-//        Log.i("ingredients name in repository: ", nowData.joinToString(", "))
     }
+
+    fun switchData(isSeason: Boolean){
+        nowData = if(isSeason) seasoningList else ingredientList
+        notifyListeners()
+    }
+
     private fun notifyListeners() {
         val ingredients = IngredientData()
         ingredients.ingredientNames = nowData

@@ -29,12 +29,15 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.view.Surface
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 
 class CameraPage : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCameraPageBinding
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
-
+    private var photoFilePaths = ArrayList<String>()
+    private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,10 +52,9 @@ class CameraPage : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
-
         // Set up the listeners for take photo and video capture buttons
-        viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
-
+        viewBinding.captureButton.setOnClickListener { capturePhotos() }
+        viewBinding.uploadButton.setOnClickListener { uploadPhotos() }
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -60,7 +62,7 @@ class CameraPage : AppCompatActivity() {
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return // 如果未建立，則不執行
 
-        viewBinding.videoCaptureButton.isEnabled = false
+        viewBinding.captureButton.isEnabled = false
 
         val curRecording = recording
         if (curRecording != null) {
@@ -91,7 +93,7 @@ class CameraPage : AppCompatActivity() {
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
-                        viewBinding.videoCaptureButton.apply {
+                        viewBinding.captureButton.apply {
                             text = getString(R.string.stop_capture)
                             isEnabled = true
                         }
@@ -122,13 +124,43 @@ class CameraPage : AppCompatActivity() {
                             recording = null
                             Log.e(TAG, "Video capture ends with error: " + "${recordEvent.error}")
                         }
-                        viewBinding.videoCaptureButton.apply {
+                        viewBinding.captureButton.apply {
                             text = getString(R.string.start_capture)
                             isEnabled = true
                         }
                     }
                 }
             }
+    }
+
+    private fun capturePhotos(){
+        val imageCapture = imageCapture ?:return
+        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+            .format(System.currentTimeMillis())
+        val photoFile = File(cacheDir, "${name}.jpg")
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object: ImageCapture.OnImageSavedCallback {
+            override fun onError(exc: ImageCaptureException) {
+                Log.e("take photo", "Photo capture failed: ${exc.message}", exc)
+            }
+            override fun onImageSaved(output: ImageCapture.OutputFileResults){
+                val savedUri = photoFile.toURI().toString()
+                photoFilePaths.add(photoFile.absolutePath)
+                Log.d("take photo", "Photo capture succeeded: $savedUri")
+                Toast.makeText(baseContext, "Photo capture succeeded", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+    private fun uploadPhotos() {
+        if(photoFilePaths.isEmpty()){
+            Toast.makeText(this, "No photos to upload", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val intent = Intent(this, ResultPage::class.java).apply {
+            putStringArrayListExtra("photoFilePaths", photoFilePaths)
+        }
+        startActivity(intent)
     }
 
     private fun startCamera() {
@@ -145,11 +177,12 @@ class CameraPage : AppCompatActivity() {
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
-            val recorder = Recorder.Builder()
-                .setQualitySelector(QualitySelector.from(Quality.HD,
-                    FallbackStrategy.higherQualityOrLowerThan(Quality.SD)))
-                .build()
-            videoCapture = VideoCapture.withOutput(recorder)
+//            val recorder = Recorder.Builder()
+//                .setQualitySelector(QualitySelector.from(Quality.HD,
+//                    FallbackStrategy.higherQualityOrLowerThan(Quality.SD)))
+//                .build()
+            val imageCaptureBuilder = ImageCapture.Builder().setTargetRotation(Surface.ROTATION_90)
+            imageCapture = imageCaptureBuilder.build()
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try {
@@ -157,7 +190,7 @@ class CameraPage : AppCompatActivity() {
                 cameraProvider.unbindAll()
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, videoCapture)
+                    this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }

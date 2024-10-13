@@ -17,7 +17,6 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
             override fun onFinish(data: IngredientData) {
                 if(data.ingredientNames?.isNotEmpty() == true){
                     userLiveData.postValue(data)
-//                    data.ingredientNames?.let { Log.i("ingredients name in view model: ", it.joinToString(", ")) }
                 }
                 else{
                     Log.i("Ingredient ViewModel", "No data received or empty")
@@ -25,6 +24,10 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
             }
         })
         return userLiveData
+    }
+
+    fun switchData(isSeason: Boolean){
+        ingredientRepository.switchData(isSeason)
     }
 
     fun setData(newData: Array<String>) {
@@ -54,7 +57,7 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
             ) {
                 if (response.isSuccessful) {
                     val list = response.body()
-                    val names: Array<String>? = list?.map { it.name }?.toTypedArray()
+                    val names: Array<String>? = list?.map { it.name.replace("_", " ") }?.toTypedArray()
                     val mandarins: Array<String>? = list?.map {it.mandarin}?.toTypedArray()
                     Log.i("onResponse3","OK")
                     if (names != null && mandarins != null) {
@@ -62,6 +65,11 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
                         setData(zipArray)
                     }
                 }
+                ingredientRepository.loadData(object: OnTaskFinish{
+                    override fun onFinish(data: IngredientData){
+                        userLiveData.postValue(data)
+                    }
+                })
             }
 
             override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
