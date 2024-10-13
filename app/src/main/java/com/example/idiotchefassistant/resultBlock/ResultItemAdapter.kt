@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.resultBlock
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -23,7 +24,7 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
                 val position = adapterPosition
                 if(position != RecyclerView.NO_POSITION){
                     val item = items[position]
-                    val imageUrls = item.image.map { "https://topic114.bntw.dev/$it" } as ArrayList<String>
+                    val imageUrls = item.image
                     val fragment = ImageDetailFragment.newInstance(imageUrls)
                     fragment.show(
                         (binding.root.context as AppCompatActivity).supportFragmentManager,

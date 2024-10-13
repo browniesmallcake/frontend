@@ -151,7 +151,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
 
     private fun showProgressDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage("Uploading Video")
+        builder.setMessage("Uploading Video...")
 
         val progressBar = ProgressBar(this)
         val params = LinearLayout.LayoutParams(
