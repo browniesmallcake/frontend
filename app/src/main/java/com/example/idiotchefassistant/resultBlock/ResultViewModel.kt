@@ -19,6 +19,9 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     val isUploading: LiveData<Boolean> get() = _isUploading
     private val _uploadResult = MutableLiveData<Boolean>()
     val uploadResult: LiveData<Boolean> get() = _uploadResult
+    var iids = emptyArray<Int>()
+    var names = emptyArray<String>()
+    var mandarins = emptyArray<String>()
 
     fun callBack(): LiveData<ResultData> {
         resultRepository.loadData(object : OnTaskFinish {
@@ -29,204 +32,186 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         return userLiveData
     }
 
-    fun addData(title: String, image: ArrayList<String>) {
-        val currentMap = resultRepository.getData()?.toMutableMap() ?: mutableMapOf()
-        currentMap[title] = image
-        resultRepository.uploadData(currentMap)
+    fun validateIdsAndNames(): Boolean {
+        if (iids.size != names.size) {
+            Log.e("validateIdsAndNames", "iids and names size mismatch")
+            return false
+        }
+        return true
     }
 
-    fun editData(oldTitle: String, newTitle: String) {
-        val currentMap = resultRepository.getData()?.toMutableMap() ?: mutableMapOf()
-        val images = currentMap.remove(oldTitle)
-        if (images != null) {
-            currentMap[newTitle] = images
-            resultRepository.uploadData(currentMap)
+    fun addData(title: String, images: ArrayList<String>) {
+        if (!validateIdsAndNames()) return
+        if (iids.isEmpty() || names.isEmpty()) {
+            Log.e("addData", "iids or names not initialized")
+            return
+        }
+        val currentData = resultRepository.getData()?: ResultData()
+        val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
+        val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
+        if (index == -1) {
+            Log.e("addData", "Title not found in names")
+            return
+        }
+        currentMap[iids[index]] = IngItem(title, images)
+        currentData.result = currentMap
+        resultRepository.uploadData(currentData)
+    }
+
+    fun editData(oldName: String, newName: String) {
+        if (!validateIdsAndNames()) return
+        if (iids.isEmpty() || names.isEmpty()) {
+            Log.e("editData", "iids or names not initialized")
+            return
+        }
+        val currentData = resultRepository.getData()?: ResultData()
+        val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
+        val oldIndex = names.indexOfFirst { it.equals(oldName, ignoreCase = true) }
+        val newIndex = names.indexOfFirst { it.equals(newName, ignoreCase = true) }
+        if (oldIndex == -1 || newIndex == -1) {
+            Log.e("editData", "Invalid indices for old or new name")
+            return
+        }
+        val ingItem = currentMap[iids[oldIndex]]
+        if (ingItem != null) {
+            val newItem = IngItem(newName, ingItem.images)
+            currentMap.remove(iids[oldIndex])
+            currentMap[iids[newIndex]] = newItem
+            currentData.result = currentMap
+            resultRepository.uploadData(currentData)
         }
     }
 
-    fun deleteData(title: String, image: ArrayList<String>? = null) {
-        val currentMap = resultRepository.getData()?.toMutableMap() ?: return
-
-        if (image == null || currentMap[title] == image) {
-            currentMap.remove(title)
+    fun deleteData(title: String) {
+        if (!validateIdsAndNames()) return
+        if (iids.isEmpty() || names.isEmpty()) {
+            Log.e("deleteData", "iids or names not initialized")
+            return
         }
-        resultRepository.uploadData(currentMap)
+        val currentData = resultRepository.getData()?: ResultData()
+        val currentMap = currentData.result?.toMutableMap() ?: return
+        val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
+        if (index == -1) {
+            Log.e("deleteData", "Title not found in names")
+            return
+        }
+        currentMap.remove(iids[index])
+        currentData.result = currentMap
+        resultRepository.uploadData(currentData)
     }
 
-    fun findData(item: String): Boolean {
-        val currentMap = resultRepository.getData()
-        return currentMap?.containsKey(item) == true
+    fun findData(title: String): Boolean {
+        if (!validateIdsAndNames()) return false
+        if (iids.isEmpty() || names.isEmpty()) {
+            Log.e("findData", "iids or names not initialized")
+            return false
+        }
+        val currentData = resultRepository.getData()?: ResultData()
+        val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
+        val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
+        if (index == -1) {
+            Log.e("findData", "Title not found in names")
+            return true
+        }
+        return currentMap.containsKey(iids[index])
     }
-
-//    fun uploadVideo(video: String?) {
-//        _isUploading.postValue(true)
-//        // upload video
-//        val videoFile = File(video.toString())
-//        val requestFile = videoFile.asRequestBody(MultipartBody.FORM)
-//        val body = MultipartBody.Part.createFormData("video", videoFile.name, requestFile)
-//        detectService.detect(body).enqueue(object : Callback<HashMap<String, String>> {
-//            override fun onResponse(
-//                call: Call<HashMap<String, ArrayList<String>>>,
-//                response: Response<HashMap<String, ArrayList<String>>>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val map = response.body()
-//                    Log.i("onResponse2", "OK")
-//                    // get ingredient list
-//                    ingredientService.getList()
-//                        .enqueue(object : Callback<ArrayList<IngredientItem>> {
-//                            override fun onResponse(
-//                                call: Call<ArrayList<IngredientItem>>,
-//                                response: Response<ArrayList<IngredientItem>>
-//                            ) {
-//                                if (response.isSuccessful) {
-//                                    val list = response.body()
-//                                    val names: Array<String>? =
-//                                        list?.map { it.name }?.toTypedArray()
-//                                    val mandarins: Array<String>? =
-//                                        list?.map { it.mandarin }?.toTypedArray()
-//                                    Log.i("onResponse3", "OK")
-//                                    val updateMap = map?.mapKeys { entry ->
-//                                        val newKey = entry.key
-//                                        val index = names?.indexOfFirst {
-//                                            it.equals(
-//                                                newKey,
-//                                                ignoreCase = true
-//                                            )
-//                                        }
-//                                        newKey.replace("_", " ")
-//                                        if (index != -1) {
-//                                            "${index?.let { mandarins?.get(it) }} ${index?.let { names[it] }}"
-//                                        } else {
-//                                            newKey
-//                                        }
-//                                    }
-//                                    val updateMapKotlin: Map<String, ArrayList<String>> = updateMap
-//                                        ?.mapValues { entry ->
-//                                            entry.value.toList().toCollection(ArrayList())
-//                                        }
-//                                        ?: emptyMap()
-//                                    resultRepository.uploadData(updateMapKotlin)
-//                                    _uploadResult.postValue(true)
-//                                    callBack()
-//                                } else {
-//                                    _uploadResult.postValue(false)
-//                                }
-//                                _isUploading.postValue(false)
-//                            }
-//
-//                            override fun onFailure(
-//                                call: Call<ArrayList<IngredientItem>>,
-//                                t: Throwable
-//                            ) {
-//                                Log.i("onFailure3", t.toString())
-//                                _uploadResult.postValue(false)
-//                                _isUploading.postValue(false)
-//                            }
-//                        })
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<HashMap<String, String>>, t: Throwable) {
-//                Log.i("onFailure2", t.toString())
-//                _uploadResult.postValue(false)
-//                _isUploading.postValue(false)
-//            }
-//        })
-//    }
 
     fun uploadPhotos(photos: ArrayList<String>?) {
         _isUploading.postValue(true)
-        val finalMap = mutableMapOf<String, ArrayList<String>>()
+        val finalMap = mutableMapOf<Int, IngItem>()
         var completedRequests = 0
         val totalRequests = photos?.size ?: 0
 
-        // 上傳每張圖片
-        photos?.forEach { p ->
-            val photoFile = File(p)
-            val requestFile = photoFile.asRequestBody(MultipartBody.FORM)
-            val body = MultipartBody.Part.createFormData("image", photoFile.name, requestFile)
+        ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
+            override fun onResponse(
+                call: Call<ArrayList<IngredientItem>>,
+                response: Response<ArrayList<IngredientItem>>
+            ) {
+                if (response.isSuccessful) {
+                    val list = response.body()
+                    iids = list?.map {it.id}?.toTypedArray()!!
+                    names = list.map { it.name }.toTypedArray()
+                    mandarins  = list.map { it.mandarin }.toTypedArray()
+                    Log.i("ingredientService", "OK")
+                    val formattedNames = Array(names.size) { i -> "${mandarins[i]} ${names[i].replace("_", " ")}" }
+                    // 上傳每張圖片
+                    photos?.forEach { p ->
+                        val photoFile = File(p)
+                        val requestFile = photoFile.asRequestBody(MultipartBody.FORM)
+                        val body = MultipartBody.Part.createFormData("image", photoFile.name, requestFile)
+                        detectService.detect(body).enqueue(object : Callback<HashMap<String, String>> {
+                            // call API 取得辨識結果
+                            override fun onResponse(
+                                call: Call<HashMap<String, String>>,
+                                response: Response<HashMap<String, String>>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val map = response.body()
+                                    // 遍歷 detectService 回傳的結果，根據 names 比對 iids 並更新 finalMap
+                                    map?.forEach { (key, value) ->
+                                        val index = names.indexOfFirst { it.equals(key, ignoreCase = true) }
+                                        if(index != -1){
+                                            val iid = iids[index]
+                                            val currentIngItem = finalMap[iid]
 
-            detectService.detect(body).enqueue(object : Callback<HashMap<String, String>> {
-                override fun onResponse(
-                    call: Call<HashMap<String, String>>,
-                    response: Response<HashMap<String, String>>
-                ) {
-                    if (response.isSuccessful) {
-                        val map = response.body()
-                        // 更新 finalMap，每個 key 對應的 ArrayList 加入新圖片
-                        map?.forEach { (key, value) ->
-                            val currentList = finalMap.getOrPut(key) { arrayListOf() }
-                            currentList.add(value)
-                        }
-                        completedRequests++
-
-                        // 當所有請求完成後才進行 ingredientService.getList 的呼叫
-                        if (completedRequests == totalRequests) {
-                            // 呼叫 ingredientService.getList() 處理資料
-                            ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
-                                override fun onResponse(
-                                    call: Call<ArrayList<IngredientItem>>,
-                                    response: Response<ArrayList<IngredientItem>>
-                                ) {
-                                    if (response.isSuccessful) {
-                                        val list = response.body()
-                                        val names: Array<String>? = list?.map { it.name }?.toTypedArray()
-                                        val mandarins: Array<String>? = list?.map { it.mandarin }?.toTypedArray()
-
-                                        Log.i("onResponse3", "OK")
-
-                                        // 替換 finalMap 中的 key，將英文名稱替換為中文名稱並去掉 '_'
-                                        val updateMap = finalMap.mapKeys { entry ->
-                                            val newKey = entry.key
-                                            val index = names?.indexOfFirst {
-                                                it.equals(newKey, ignoreCase = true)
+                                            if(currentIngItem != null){
+                                                // 如果 finalMap 已經有這個 iid，則更新 images 列表
+                                                val updatedImages = currentIngItem.images
+                                                updatedImages.add(value)
+                                                val updatedItem = IngItem(currentIngItem.name, updatedImages)
+                                                finalMap[iid] = updatedItem
                                             }
-                                            newKey.replace("_", " ").let {
-                                                if (index != -1) {
-                                                    "${index?.let { mandarins?.get(it) }} ${index?.let { names[it] }}"
-                                                } else {
-                                                    it
-                                                }
+                                            else{
+                                                val newName = "${mandarins[index]} ${names[index]}".replace("_", " ")
+                                                finalMap[iid] = IngItem(newName, arrayListOf(value))
                                             }
+                                            Log.i("detectService", "Added image for name: $key with iid: $iid")
+                                        } else{
+                                            Log.w("detectService", "No matching iid found for name: $key")
                                         }
-
-                                        // 將最終的 updateMap 上傳到 resultRepository
-                                        resultRepository.uploadData(updateMap)
+                                    }
+                                    completedRequests++
+                                    // 當所有請求完成後才進行 ingredientService.getList 的呼叫
+                                    if (completedRequests == totalRequests) {
+                                        val data = ResultData()
+                                        data.result = finalMap
+                                        resultRepository.uploadData(data)
                                         _uploadResult.postValue(true)
                                         callBack()
-                                    } else {
-                                        _uploadResult.postValue(false)
+                                        _isUploading.postValue(false)
+                                        names = formattedNames
                                     }
-                                    _isUploading.postValue(false)
+                                } else{
+                                    Log.e("detectService", "Failed to detect: ${response.message()}")
+                                    handleFailure()
                                 }
-
-                                override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
-                                    Log.i("onFailure3", t.toString())
+                            }
+                            override fun onFailure(call: Call<HashMap<String, String>>, t: Throwable) {
+                                Log.e("detectService", "Request failed: ${t.message}")
+                                handleFailure()
+                            }
+                            private fun handleFailure(){
+                                completedRequests++
+                                if (completedRequests == totalRequests) {
                                     _uploadResult.postValue(false)
                                     _isUploading.postValue(false)
                                 }
-                            })
-                        }
+                            }
+                        })
                     }
-                }
-
-                override fun onFailure(call: Call<HashMap<String, String>>, t: Throwable) {
-                    Log.i("onFailure2", t.toString())
-                    completedRequests++
-                    if (completedRequests == totalRequests) {
-                        _uploadResult.postValue(false)
+                    if(totalRequests == 0){
                         _isUploading.postValue(false)
+                        _uploadResult.postValue(false)
                     }
+                }else{
+                    Log.e("ingredientService", "Failed to get ingredients: ${response.message()}")
+                    _isUploading.postValue(false)
                 }
-            })
-        }
-
-        // 如果沒有圖片要上傳，直接更新狀態
-        if (totalRequests == 0) {
-            _isUploading.postValue(false)
-            _uploadResult.postValue(false)
-        }
+            }
+            override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
+                Log.e("ingredientService", "Request failed: ${t.message}")
+                _isUploading.postValue(false)
+            }
+        })
     }
-
 }

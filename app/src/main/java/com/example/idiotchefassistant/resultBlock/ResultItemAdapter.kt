@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.impl.ImageOutputConfig.RotationDegreesValue
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding

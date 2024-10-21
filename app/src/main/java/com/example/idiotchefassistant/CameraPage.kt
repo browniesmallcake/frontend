@@ -3,6 +3,9 @@ package com.example.idiotchefassistant
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +34,8 @@ import java.util.Locale
 import android.view.Surface
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.exifinterface.media.ExifInterface
+import java.io.FileOutputStream
 
 class CameraPage : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCameraPageBinding
@@ -58,79 +63,17 @@ class CameraPage : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    // Implements VideoCapture use case, including start nd stop capturing.
-    private fun captureVideo() {
-        val videoCapture = this.videoCapture ?: return // 如果未建立，則不執行
+    private fun rotateImage(file:File): File{
+        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+        val matrix = Matrix()
+        matrix.postRotate(90f)  // 旋转90度
+        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 
-        viewBinding.captureButton.isEnabled = false
-
-        val curRecording = recording
-        if (curRecording != null) {
-            // Stop the current recording session.
-            curRecording.stop()
-            recording = null
-            return
+        val rotatedFile = File(file.parent, "rotated_${file.name}")
+        FileOutputStream(rotatedFile).use { out ->
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
         }
-        // create and start a new recording session
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val videoFile = File(cacheDir, "${name}.mp4")
-        val mediaStoreOutputOptions = FileOutputOptions.Builder(videoFile).build()
-
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-//            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-//                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video")
-//            }
-//        }
-//        val mediaStoreOutputOptions = MediaStoreOutputOptions
-//            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-//            .setContentValues(contentValues)
-//            .build()
-        recording = videoCapture.output
-            .prepareRecording(this, mediaStoreOutputOptions)
-            .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
-                when(recordEvent) {
-                    is VideoRecordEvent.Start -> {
-                        viewBinding.captureButton.apply {
-                            text = getString(R.string.stop_capture)
-                            isEnabled = true
-                        }
-                    }
-                    is VideoRecordEvent.Finalize -> {
-                        if (!recordEvent.hasError()) {
-                            val msg = "Video capture succeeded: " + "${recordEvent.outputResults.outputUri}"
-//                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                            Log.d(TAG, msg)
-
-                            val files = cacheDir.listFiles()
-                            files?.forEach {
-                                Log.d(TAG, "File in cache: ${it.name} - Size: ${it.length()} bytes")
-                            }
-                            if (files?.contains(videoFile) == true) {
-                                Log.d(TAG, "Video file ${videoFile.name} found in cache.")
-                            } else {
-                                Log.e(TAG, "Video file not found in cache.")
-                            }
-
-                            val intent = Intent(this, ResultPage::class.java).apply {
-                                putExtra("videoUri", videoFile.toString())
-                            }
-                            startActivity(intent)
-                        }
-                        else {
-                            recording?.close()
-                            recording = null
-                            Log.e(TAG, "Video capture ends with error: " + "${recordEvent.error}")
-                        }
-                        viewBinding.captureButton.apply {
-                            text = getString(R.string.start_capture)
-                            isEnabled = true
-                        }
-                    }
-                }
-            }
+        return rotatedFile
     }
 
     private fun capturePhotos(){
@@ -145,7 +88,8 @@ class CameraPage : AppCompatActivity() {
             }
             override fun onImageSaved(output: ImageCapture.OutputFileResults){
                 val savedUri = photoFile.toURI().toString()
-                photoFilePaths.add(photoFile.absolutePath)
+                val rotateFile = rotateImage(photoFile)
+                photoFilePaths.add(rotateFile.absolutePath)
                 Log.d("take photo", "Photo capture succeeded: $savedUri")
                 Toast.makeText(baseContext, "Photo capture succeeded", Toast.LENGTH_SHORT).show()
                 }
@@ -170,9 +114,11 @@ class CameraPage : AppCompatActivity() {
             // 以下是執行功能
             // 綁定相機到進程中的lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val displayRotation = viewBinding.viewFinder.display.rotation
             // Preview
             val preview = Preview.Builder()
-                .setTargetRotation(Surface.ROTATION_180)
+//                .setTargetRotation(Surface.ROTATION_180)
+                .setTargetRotation(displayRotation)
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
@@ -181,7 +127,8 @@ class CameraPage : AppCompatActivity() {
 //                .setQualitySelector(QualitySelector.from(Quality.HD,
 //                    FallbackStrategy.higherQualityOrLowerThan(Quality.SD)))
 //                .build()
-            val imageCaptureBuilder = ImageCapture.Builder().setTargetRotation(Surface.ROTATION_90)
+            val imageCaptureBuilder = ImageCapture.Builder()
+                .setTargetRotation(displayRotation)
             imageCapture = imageCaptureBuilder.build()
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA

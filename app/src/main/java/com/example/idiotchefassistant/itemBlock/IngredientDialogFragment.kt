@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.itemBlock
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,6 +24,7 @@ class IngredientDialogFragment : DialogFragment() {
     private var listener: OnItemSelectedListener? = null
     private var isSeason = false
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

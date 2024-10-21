@@ -43,9 +43,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         ingredientFactory = IngredientFactory(ingredientRepository)
         ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
-//        val video = intent.getStringExtra("videoUri")
-//        resultViewModel.uploadVideo(video)
-
         val photos = intent.getStringArrayListExtra("photoFilePaths")
         resultViewModel.uploadPhotos(photos)
 
@@ -57,7 +54,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         recyclerView.adapter = adapter
         resultViewModel.callBack().observe(this) {
             val items = it.result?.map { entry ->
-                ResultItem(entry.value, entry.key)
+                ResultItem(entry.value.images, entry.value.name)
             } ?: emptyList()
             adapter.updateItems(items)
         }
@@ -73,7 +70,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             if (!isSuccess) {
                 AlertDialog.Builder(this)
                     .setTitle("Upload Failed")
-                    .setMessage("The video upload failed, please try again.")
+                    .setMessage("The pictures upload failed, please try again.")
                     .setPositiveButton("OK", null)
                     .show()
             }
@@ -90,7 +87,6 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             val intent = Intent(this, SearchPage::class.java)
             startActivity(intent)
         }
-
     }
 
     override fun onEditClick(item: ResultItem) {
@@ -102,33 +98,31 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
     }
 
     override fun onItemSelected(itemName: String?) {
-        if (itemName != null) {
-            if (isEditMode) {
-                if (resultViewModel.findData(itemName)) {
-                    AlertDialog.Builder(this)
-                        .setTitle("Item Exist Already")
-                        .setMessage("The item \"${itemName}\" does exist in the list.")
-                        .setPositiveButton("OK", null)
-                        .show()
-                } else {
-                    resultViewModel.editData(editItemTitle!!, itemName)
-                }
+        if (isEditMode) {
+            if (resultViewModel.findData(itemName.toString())) {
+                AlertDialog.Builder(this)
+                    .setTitle("Item Exist Already")
+                    .setMessage("The item \"${itemName}\" does exist in the list.")
+                    .setPositiveButton("OK", null)
+                    .show()
             } else {
-                if (resultViewModel.findData(itemName)) {
-                    AlertDialog.Builder(this)
-                        .setTitle("Item Exist Already")
-                        .setMessage("The item \"${itemName}\" does exist in the list.")
-                        .setPositiveButton("OK", null)
-                        .show()
-                } else {
-                    resultViewModel.addData(
-                        itemName,
-                        arrayListOf("app/src/main/res/drawable/logo.png")
-                    ) // Pass the image path here
-                }
+                resultViewModel.editData(editItemTitle!!, itemName.toString())
+            }
+        } else {
+            if (resultViewModel.findData(itemName.toString())) {
+                AlertDialog.Builder(this)
+                    .setTitle("Item Exist Already")
+                    .setMessage("The item \"${itemName}\" does exist in the list.")
+                    .setPositiveButton("OK", null)
+                    .show()
+            } else {
+                resultViewModel.addData(
+                    itemName.toString(),
+                    arrayListOf("app/src/main/res/drawable/logo.png")
+                ) // Pass the image path here
             }
         }
-        adapter.updateItems(resultRepository.getData()?.map { ResultItem(it.value, it.key) } ?: emptyList())
+        adapter.updateItems(resultRepository.getData()?.result?.map { ResultItem(it.value.images, it.value.name) } ?: emptyList())
     }
 
     override fun onDeleteClick(item: ResultItem) {
@@ -146,7 +140,8 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
                 else {
                     resultViewModel.deleteData(item.title)
                 }
-                adapter.updateItems(resultRepository.getData()?.map { ResultItem(it.value, it.key) } ?: emptyList())
+                adapter.updateItems(resultRepository.getData()?.result?.map { ResultItem(it.value.images, it.value.name) } ?: emptyList())
+
             }
             .setNegativeButton("No", null)
             .show()
@@ -154,7 +149,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
 
     private fun showProgressDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage("Uploading Video...")
+        builder.setMessage("Uploading Pictures...")
 
         val progressBar = ProgressBar(this)
         val params = LinearLayout.LayoutParams(
