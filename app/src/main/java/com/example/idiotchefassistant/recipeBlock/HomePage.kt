@@ -38,7 +38,7 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
     private fun generateFakeData(cnt: Int): List<RecipeItem> {
         val fakeData = mutableListOf<RecipeItem>()
         for (i in 1..cnt) {
-            fakeData.add(RecipeItem("食譜 $i", "食譜 $i 的描述", 5))
+            fakeData.add(RecipeItem(i,"食譜 $i", "食譜 $i 的作者", "食譜 $i 的描述", ""))
         }
         return fakeData
     }

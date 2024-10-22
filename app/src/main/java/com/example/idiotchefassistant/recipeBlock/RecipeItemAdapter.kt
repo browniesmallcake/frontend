@@ -24,9 +24,8 @@ class RecipeItemAdapter(private val items: List<RecipeItem>) :
         }
 
         fun bind(item: RecipeItem) {
-            binding.itemTitle.text = item.Title
-            binding.itemDesc.text = item.description
-            binding.itemReview.text = item.review.toString()
+            binding.itemTitle.text = item.title
+            binding.itemReview.text = "5.0"
         }
     }
 

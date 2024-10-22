@@ -84,8 +84,12 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         }
 
         binding.searchButton.setOnClickListener {
-            val intent = Intent(this, SearchPage::class.java)
-            startActivity(intent)
+            resultViewModel.resultSearch().observe(this){ rList->
+                val intent = Intent(this, SearchPage::class.java).apply {
+                    putParcelableArrayListExtra("rItems", ArrayList(rList))
+                }
+                startActivity(intent)
+            }
         }
     }
 

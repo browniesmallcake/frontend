@@ -23,7 +23,6 @@ class HistoryPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         }
         binding.EditText
         val item = mutableListOf<RecipeItem>()
-        item.add(RecipeItem("搜尋食譜歷史", "食譜的描述", 5))
         val recycleView = binding.RecipeRecycleView
         recycleView.layoutManager = LinearLayoutManager(this)
 
