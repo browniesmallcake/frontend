@@ -224,7 +224,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             liveData.postValue(emptyList())
             return liveData
         }
-        resultSearchService.search(1, iids).enqueue(object: Callback<List<RecipeItem>>{
+        resultSearchService.search(0, iids).enqueue(object: Callback<List<RecipeItem>>{
             override fun onResponse(
                 call: Call<List<RecipeItem>>,
                 response: Response<List<RecipeItem>>

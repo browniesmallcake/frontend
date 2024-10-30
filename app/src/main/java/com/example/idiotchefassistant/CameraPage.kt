@@ -9,9 +9,6 @@ import android.graphics.Matrix
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.concurrent.ExecutorService
@@ -21,26 +18,19 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
-import androidx.camera.video.FallbackStrategy
-import androidx.camera.video.FileOutputOptions
-import androidx.camera.video.Quality
-import androidx.camera.video.QualitySelector
-import androidx.camera.video.VideoRecordEvent
 import com.example.idiotchefassistant.resultBlock.ResultPage
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.view.Surface
+import android.view.ViewTreeObserver
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.exifinterface.media.ExifInterface
 import java.io.FileOutputStream
 
 class CameraPage : AppCompatActivity() {
     private lateinit var viewBinding: ActivityCameraPageBinding
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
     private var photoFilePaths = ArrayList<String>()
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
@@ -52,7 +42,7 @@ class CameraPage : AppCompatActivity() {
 
         // Request camera permissions
         if (allPermissionsGranted()) {
-            startCamera()
+            initializeCamera()
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
@@ -61,6 +51,16 @@ class CameraPage : AppCompatActivity() {
         viewBinding.captureButton.setOnClickListener { capturePhotos() }
         viewBinding.uploadButton.setOnClickListener { uploadPhotos() }
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+    }
+
+    private fun initializeCamera(){
+        viewBinding.viewFinder.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                viewBinding.viewFinder.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                startCamera(viewBinding.viewFinder.display?.rotation ?: Surface.ROTATION_0)
+            }
+        })
     }
 
     private fun rotateImage(file:File): File{
@@ -107,26 +107,20 @@ class CameraPage : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun startCamera() {
+    private fun startCamera(displayRotation: Int) {
         // 綁定相機的生命週期到生命週期所有者，包含了開啟和關閉相機的任務
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             // 以下是執行功能
             // 綁定相機到進程中的lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            val displayRotation = viewBinding.viewFinder.display.rotation
             // Preview
             val preview = Preview.Builder()
-//                .setTargetRotation(Surface.ROTATION_180)
                 .setTargetRotation(displayRotation)
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
-//            val recorder = Recorder.Builder()
-//                .setQualitySelector(QualitySelector.from(Quality.HD,
-//                    FallbackStrategy.higherQualityOrLowerThan(Quality.SD)))
-//                .build()
             val imageCaptureBuilder = ImageCapture.Builder()
                 .setTargetRotation(displayRotation)
             imageCapture = imageCaptureBuilder.build()
@@ -173,7 +167,7 @@ class CameraPage : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-                startCamera()
+                initializeCamera()
             } else {
                 Toast.makeText(this,
                     "Permissions not granted by the user.",

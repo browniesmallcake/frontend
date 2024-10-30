@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp"
     tools:context=".recipeBlock.RecipePage">
 
@@ -16,6 +16,7 @@
             android:id="@+id/recipe_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Recipe Name"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -26,52 +27,77 @@
             android:id="@+id/recipe_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:padding="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logo"
             android:contentDescription="recipe_image" />
 
         <!-- Recipe Review -->
-        <TextView
-            android:id="@+id/recipe_review"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rating: 5 stars"
-            android:paddingTop="10dp" />
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:textSize="40sp"
+                android:text="5.0" />
+
+            <RatingBar
+                android:id="@+id/recipe_review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:numStars="5"
+                android:isIndicator="true"
+                android:rating="5"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:stepSize="1"/>
+        </LinearLayout>
         <!-- Ingredients Menu -->
         <TextView
             android:id="@+id/ingredients_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
+            android:padding="10dp"
+            android:text="@string/ingredients_in_recipe"
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingTop="16dp" />
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
         <!-- Community Comments Title -->
         <TextView
             android:id="@+id/community_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Community Comments"
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingTop="16dp" />
-
         <!-- Comment Bar -->
         <EditText
             android:id="@+id/comment_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:hint="Leave a comment"
             android:paddingTop="16dp" />
 
-        <!-- Comment Section -->
-        <LinearLayout
-            android:id="@+id/commentSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="4dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewIngredients"
+            android:layout_width="350dp"
+            android:layout_height="450dp"
+            android:padding="10dp"
+            tools:itemCount="5"
+            tools:listitem="@layout/recipe_commit_item"
+            android:nestedScrollingEnabled="false"/>
     </LinearLayout>
 </ScrollView>

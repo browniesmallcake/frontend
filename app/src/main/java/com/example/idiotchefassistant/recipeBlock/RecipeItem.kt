@@ -11,4 +11,4 @@ data class RecipeItem(
     val description:String?,
     val rType:String?
 ): Parcelable
-data class CommitItem(val userImg: Int, val userName:String, val commit:String, val review:Int)
+data class CommitItem(val userImg: Int, val userName:String, val context:String, val review:Int)

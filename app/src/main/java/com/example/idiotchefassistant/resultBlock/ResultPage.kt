@@ -2,6 +2,7 @@ package com.example.idiotchefassistant.resultBlock
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
@@ -44,8 +45,11 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
         val photos = intent.getStringArrayListExtra("photoFilePaths")
-        resultViewModel.uploadPhotos(photos)
-
+        try {
+            resultViewModel.uploadPhotos(photos)
+        }catch (e:Exception){
+            Log.e("NetworkError", "Unable to resolve host: ${e.message}")
+        }
         // get the data from server
         val recyclerView = binding.recyclerViewIngredients
         recyclerView.layoutManager = LinearLayoutManager(this)
