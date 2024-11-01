@@ -18,6 +18,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
+import android.util.Size
 import com.example.idiotchefassistant.resultBlock.ResultPage
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.io.File
@@ -115,15 +116,18 @@ class CameraPage : AppCompatActivity() {
             // 綁定相機到進程中的lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             // Preview
+            val targetResolution = Size(1280, 720)
             val preview = Preview.Builder()
                 .setTargetRotation(displayRotation)
+                .setTargetResolution(targetResolution)
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
-            val imageCaptureBuilder = ImageCapture.Builder()
+            imageCapture = ImageCapture.Builder()
+                .setTargetResolution(targetResolution)
                 .setTargetRotation(displayRotation)
-            imageCapture = imageCaptureBuilder.build()
+                .build()
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try {

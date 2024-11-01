@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.databinding.RecipeItemListBinding
 
-class RecipeItemAdapter(private val items: List<RecipeItem>) :
+class RecipeItemAdapter(private var items: List<RecipeItem>) :
     RecyclerView.Adapter<RecipeItemAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
@@ -45,6 +45,11 @@ class RecipeItemAdapter(private val items: List<RecipeItem>) :
 
     fun setOnItemClickListener(listener: OnItemClickListener?) {
         itemClickListener = listener
+    }
+
+    fun updateItems(newItems: List<RecipeItem>){
+        items = newItems
+        notifyDataSetChanged()
     }
 
     interface OnItemClickListener{

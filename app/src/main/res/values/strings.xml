@@ -49,4 +49,5 @@
     <string name="find_ingred">尋找調味料</string>
     <string name="enter_recipe_name">Enter recipe name</string>
     <string name="ingredients_in_recipe">Ingredients:</string>
+    <string name="img_des">img</string>
 </resources>

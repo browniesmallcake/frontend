@@ -2,6 +2,10 @@ package com.example.idiotchefassistant.recipeBlock
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +18,7 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchFactory: SearchFactory
     private lateinit var searchRepository: SearchRepository
+    private lateinit var adapter: RecipeItemAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,30 +29,63 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         searchFactory = SearchFactory(searchRepository)
         searchViewModel = ViewModelProvider(this, searchFactory)[SearchViewModel::class.java]
 
-        searchViewModel.callBack().observe(this){
-        }
-        val rItems = intent.getParcelableArrayListExtra<RecipeItem>("rItems")
-        binding.HomeBtn.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-        binding.EditText
-        binding.SearchBtn
-        binding.backPage.setOnClickListener{
+        adapter = RecipeItemAdapter(emptyList())
+        adapter.setOnItemClickListener(this)
+        binding.RecipeRecycleView.layoutManager = LinearLayoutManager(this)
+        binding.RecipeRecycleView.adapter = adapter
 
+//      Observe live data
+        searchViewModel.callBack().observe(this){data ->
+            Log.d("SearchPage", "Received items: ${data.list?.size ?: 0}")
+            adapter.updateItems(data.list ?: emptyList())
         }
-        binding.nextPage
-        // upload recycleView
+
+//      upload recycleView
+        val rItems = intent.getParcelableArrayListExtra<RecipeItem>("rItems")
         val item = mutableListOf<RecipeItem>()
         rItems?.forEach { r ->
             item.add(RecipeItem(r.rid, r.title, r.author, r.description, r.rType))
         }
-        val recycleView = binding.RecipeRecycleView
-        recycleView.layoutManager = LinearLayoutManager(this)
+        val searchData = SearchData()
+        searchData.list = ArrayList(item)
+        searchViewModel.uploadData(searchData)
 
-        val adapter = RecipeItemAdapter(item)
-        adapter.setOnItemClickListener(this)
-        recycleView.adapter = adapter
+        binding.HomeBtn.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        binding.EditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val newKeyword = s.toString()
+                searchViewModel.setKeyword(newKeyword)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+        binding.SearchBtn.setOnClickListener{
+            searchViewModel.keywordSearch()
+        }
+        binding.backPage.setOnClickListener{
+            searchViewModel.backPage().observe(this){ isLastPage ->
+                if(!isLastPage){
+                    Toast.makeText(this, "已經是第一頁了", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        binding.nextPage.setOnClickListener{
+            searchViewModel.nextPage().observe(this) { isLastPage ->
+                if (isLastPage) {
+                    searchViewModel.backPage()
+                    Toast.makeText(this, "已經是最後一頁了", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        searchViewModel.nowOffset.observe(this) { offset ->
+            val s = offset + 1
+            binding.offset.text = s.toString()
+        }
     }
 
     override fun onItemClick(item: RecipeItem) {

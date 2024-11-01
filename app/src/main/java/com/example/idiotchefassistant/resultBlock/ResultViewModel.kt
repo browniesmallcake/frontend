@@ -218,13 +218,12 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
 
     fun resultSearch(): LiveData<List<RecipeItem>>{
         val liveData = MutableLiveData<List<RecipeItem>>()
-        val nowData = resultRepository.getData()
-        val iids = nowData?.result?.keys?.toList()?: emptyList()
+        val iids = resultRepository.getData()?.result?.keys?.toList()?: emptyList()
         if(iids.isEmpty()){
             liveData.postValue(emptyList())
             return liveData
         }
-        resultSearchService.search(0, iids).enqueue(object: Callback<List<RecipeItem>>{
+        resultSearchService.searchByIid(0, iids).enqueue(object: Callback<List<RecipeItem>>{
             override fun onResponse(
                 call: Call<List<RecipeItem>>,
                 response: Response<List<RecipeItem>>
@@ -233,7 +232,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                     response.body()?.let {
                         // 迭代所有的 RecipeItem 並 log 出其屬性
                         for (recipe in it) {
-                            Log.i("RecipeItem", "ID: ${recipe.rid}, Title: ${recipe.title}, Author: ${recipe.author}, Description: ${recipe.description}, Type: ${recipe.rType}")
+                            Log.i("RecipeItem", "ID: ${recipe.rid}, Title: ${recipe.title}")
                         }
                     } ?: Log.e("searchRecipe", "Response body is null")
                     liveData.postValue(response.body())

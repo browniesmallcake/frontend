@@ -13,9 +13,8 @@ class ResultRepository {
         return nowData
     }
 
-    fun uploadData(newResults: ResultData) {
-        nowData.value = newResults
-//        Log.i("ingredients name: ", newResults.keys.toString())
+    fun uploadData(newData: ResultData) {
+        nowData.value = newData
     }
 
     fun getData(): ResultData? {
