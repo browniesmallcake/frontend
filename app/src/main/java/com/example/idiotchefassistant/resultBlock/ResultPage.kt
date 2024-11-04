@@ -88,9 +88,11 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         }
 
         binding.searchButton.setOnClickListener {
+            val iids = ArrayList(resultRepository.getData()?.result?.keys?: emptyList())
             resultViewModel.resultSearch().observe(this){ rList->
                 val intent = Intent(this, SearchPage::class.java).apply {
                     putParcelableArrayListExtra("rItems", ArrayList(rList))
+                    putIntegerArrayListExtra("iids", iids)
                 }
                 startActivity(intent)
             }

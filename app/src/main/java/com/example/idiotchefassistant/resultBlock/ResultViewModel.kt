@@ -223,31 +223,6 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             liveData.postValue(emptyList())
             return liveData
         }
-        resultSearchService.searchByIid(0, iids).enqueue(object: Callback<List<RecipeItem>>{
-            override fun onResponse(
-                call: Call<List<RecipeItem>>,
-                response: Response<List<RecipeItem>>
-            ) {
-                if(response.isSuccessful){
-                    response.body()?.let {
-                        // 迭代所有的 RecipeItem 並 log 出其屬性
-                        for (recipe in it) {
-                            Log.i("RecipeItem", "ID: ${recipe.rid}, Title: ${recipe.title}")
-                        }
-                    } ?: Log.e("searchRecipe", "Response body is null")
-                    liveData.postValue(response.body())
-                }
-                else{
-                    Log.e("searchRecipe", "Failed:${response.code()} ${response.message()}")
-                    liveData.postValue(emptyList())
-                }
-            }
-
-            override fun onFailure(call: Call<List<RecipeItem>>, t: Throwable) {
-                Log.e("searchRecipe", "API call failed: ${t.message}")
-                liveData.postValue(emptyList())
-            }
-        })
-        return liveData
+        return resultRepository.searchByIids(0, iids)
     }
 }

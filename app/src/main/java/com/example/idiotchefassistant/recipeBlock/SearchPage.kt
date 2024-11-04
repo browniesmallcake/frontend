@@ -46,6 +46,9 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         rItems?.forEach { r ->
             item.add(RecipeItem(r.rid, r.title, r.author, r.description, r.rType))
         }
+        val iids = intent.getIntegerArrayListExtra("iids")?: emptyList<Int>()
+        searchViewModel.setIids(iids.toList())
+
         val searchData = SearchData()
         searchData.list = ArrayList(item)
         searchViewModel.uploadData(searchData)

@@ -10,7 +10,7 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
     val nowOffset: LiveData<Int> get() = _nowOffset
     private var iids = emptyList<Int>()
     private val _keyword = MutableLiveData<String>()
-    val keyword: LiveData<String> get() = _keyword
+    private val keyword: LiveData<String> get() = _keyword
     private var searchByIds = true
     private var recipeIsNull = false
 
@@ -40,6 +40,10 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
 
     fun setKeyword(newKeyword: String){
         _keyword.value = newKeyword
+    }
+
+    fun setIids(nowIids: List<Int>){
+        iids = nowIids
     }
 
     fun keywordSearch(){
