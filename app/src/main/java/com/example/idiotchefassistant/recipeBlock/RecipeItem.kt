@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class RecipeItem(
     val rid:Int,
     val title:String,
-    val author:String?,
-    val description:String?,
-    val rType:String?
+    val link:String?,
+    val score:Int
 ): Parcelable
-data class CommitItem(val userImg: Int, val userName:String, val context:String, val review:Int)
+
+//data class CommitItem(val userImg: Int, val userName:String, val context:String, val review:Int)

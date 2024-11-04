@@ -25,7 +25,7 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
             startActivity(intent)
         }
 
-        val items = generateFakeData(10)
+        val items = generateFakeData()
         val recycleView = binding.RecipeRecycleView
         recycleView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -35,10 +35,10 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
 
         return view
     }
-    private fun generateFakeData(cnt: Int): List<RecipeItem> {
+    private fun generateFakeData(): List<RecipeItem> {
         val fakeData = mutableListOf<RecipeItem>()
-        for (i in 1..cnt) {
-            fakeData.add(RecipeItem(i,"食譜 $i", "食譜 $i 的作者", "食譜 $i 的描述", ""))
+        for (i in 1..10) {
+            fakeData.add(RecipeItem(i,"食譜 $i", "https://www.youtube.com/watch?v=OblT91aXQ5c", 5))
         }
         return fakeData
     }

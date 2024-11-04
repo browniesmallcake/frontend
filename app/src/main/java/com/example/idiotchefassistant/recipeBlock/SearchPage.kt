@@ -44,7 +44,7 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         val rItems = intent.getParcelableArrayListExtra<RecipeItem>("rItems")
         val item = mutableListOf<RecipeItem>()
         rItems?.forEach { r ->
-            item.add(RecipeItem(r.rid, r.title, r.author, r.description, r.rType))
+            item.add(RecipeItem(r.rid, r.title, r.link, r.score))
         }
         val iids = intent.getIntegerArrayListExtra("iids")?: emptyList<Int>()
         searchViewModel.setIids(iids.toList())
