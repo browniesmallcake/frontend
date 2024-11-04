@@ -3,15 +3,23 @@ package com.example.idiotchefassistant.itemBlock
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.example.idiotchefassistant.resultBlock.ingredientService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 class IngredientViewModel(private var ingredientRepository: IngredientRepository): ViewModel() {
     private var userLiveData = MutableLiveData<IngredientData>()
-
+    private val ingredientObserver = Observer<ArrayList<IngredientItem>> { list ->
+        if (list.isNotEmpty()) {
+            val names: Array<String> = list.map { it.name.replace("_", " ") }.toTypedArray()
+            val mandarins: Array<String> = list.map { it.mandarin }.toTypedArray()
+            val zipArray = names.zip(mandarins) { name, mandarin -> "$mandarin $name" }.toTypedArray()
+            ingredientRepository.setData(zipArray)
+            val ingredientData = IngredientData()
+            ingredientData.ingredientNames = zipArray
+            userLiveData.postValue(ingredientData)
+        } else {
+            Log.i("IngredientViewModel", "Received empty data")
+        }
+    }
     fun callBack(): LiveData<IngredientData> {
         ingredientRepository.loadData(object : OnTaskFinish {
             override fun onFinish(data: IngredientData) {
@@ -49,33 +57,11 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
     }
 
     fun getData() {
-        // get ingredient list
-        ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
-            override fun onResponse(
-                call: Call<ArrayList<IngredientItem>>,
-                response: Response<ArrayList<IngredientItem>>
-            ) {
-                if (response.isSuccessful) {
-                    val list = response.body()
-                    val names: Array<String>? = list?.map { it.name.replace("_", " ") }?.toTypedArray()
-                    val mandarins: Array<String>? = list?.map {it.mandarin}?.toTypedArray()
-                    Log.i("onResponse3","OK")
-                    if (names != null && mandarins != null) {
-                        val zipArray = names.zip(mandarins) {name, mandarin -> "$mandarin $name"}.toTypedArray()
-                        setData(zipArray)
-                    }
-                }
-                ingredientRepository.loadData(object: OnTaskFinish{
-                    override fun onFinish(data: IngredientData){
-                        userLiveData.postValue(data)
-                    }
-                })
-            }
+        ingredientRepository.getIngredients().observeForever(ingredientObserver)
+    }
 
-            override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
-                Log.i("onFailure3",t.toString())
-            }
-
-        })
+    override fun onCleared() {
+        super.onCleared()
+        ingredientRepository.getIngredients().removeObserver(ingredientObserver)
     }
 }
