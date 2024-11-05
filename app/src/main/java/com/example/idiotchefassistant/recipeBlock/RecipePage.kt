@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.ActivityRecipePageBinding
@@ -27,7 +29,8 @@ class RecipePage : AppCompatActivity() {
 
         // get recipe content
         val rid = intent.getIntExtra("rid", -1)
-        recipeRepository.getRecipeContent(rid)
+        recipeViewModel.getData(rid)
+
         recipeViewModel.callBack().observe(this) { data ->
             Log.d("SearchPage", "Received items: $data")
             binding.recipeName.text = data?.title ?: "Unknown"
@@ -42,6 +45,12 @@ class RecipePage : AppCompatActivity() {
             val floatValue: Float = (data?.score ?: 0).toFloat()
             binding.recipeReviewNum.text = floatValue.toString()
             binding.recipeReviewStar.rating = floatValue
+            // create ingredients adapter
+            recipeViewModel.getIngredients(data.iids).observe(this) { ingredients ->
+                val adapter = RecipeIngredientsAdapter(ingredients)
+                binding.ingredients.layoutManager = LinearLayoutManager(this)
+                binding.ingredients.adapter = adapter
+            }
         }
     }
 }

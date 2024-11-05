@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idiotchefassistant.R
-import com.example.idiotchefassistant.databinding.RecyclerViewItemBinding
+import com.example.idiotchefassistant.databinding.ResultItemBinding
 import coil.load
 
 class ResultItemAdapter(private var items: List<ResultItem>) :
@@ -14,14 +14,16 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
 
     private var itemClickListener: OnItemClickListener? = null
 
-    inner class ViewHolder(private val binding:RecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(
+        private val binding: ResultItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         private val editButton: ImageView = itemView.findViewById(R.id.edit_button)
         private val deleteButton: ImageView = itemView.findViewById(R.id.delete_button)
 
         init {
-            binding.root.setOnClickListener{
+            binding.root.setOnClickListener {
                 val position = adapterPosition
-                if(position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
                     val item = items[position]
                     val imageUrls = item.image
                     val fragment = ImageDetailFragment.newInstance(imageUrls)
@@ -34,7 +36,7 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
         }
 
         fun bind(item: ResultItem) {
-            binding.itemTitle.text = item.title
+            binding.itemTitle.text = item.name
             // binding image
             val imageUrl = "https://topic114.bntw.dev/${item.image.firstOrNull()}"
             binding.itemImage.load(imageUrl)
@@ -48,7 +50,8 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ResultItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -69,7 +72,7 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
         notifyDataSetChanged()
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onEditClick(item: ResultItem)
         fun onDeleteClick(item: ResultItem)
     }

@@ -3,6 +3,8 @@ package com.example.idiotchefassistant.recipeBlock
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.idiotchefassistant.ingredientService
+import com.example.idiotchefassistant.itemBlock.IngredientItem
 import com.example.idiotchefassistant.recipeService
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,8 +16,7 @@ class RecipeRepository {
 
     fun loadData(task: OnTaskFinish): MutableLiveData<RecipeData>{
         Executors.newSingleThreadExecutor().submit{
-            var data = RecipeData()
-            data = liveData.value!!
+            val data = RecipeData()
             task.onFinish(data)
         }
         return liveData
@@ -30,14 +31,6 @@ class RecipeRepository {
             ){
                 if(response.isSuccessful){
                     liveData.postValue(response.body())
-                    Log.i("getRecipeContent", "rid: $rid\n" +
-                            "title: ${response.body()?.title}\n" +
-                            "video: ${response.body()?.video}\n" +
-                            "descr: ${response.body()?.description}\n" +
-                            "score: ${response.body()?.score}\n" +
-                            "rtype: ${response.body()?.rtype}\n" +
-                            "iids : ${response.body()?.iids}\n" +
-                            "comts: ${response.body()?.comments}\n")
                 }
                 else{
                     liveData.postValue(RecipeData())
@@ -52,6 +45,33 @@ class RecipeRepository {
         })
         return liveData
     }
+
+    fun getIngredients(): LiveData<ArrayList<IngredientItem>> {
+        val liveData = MutableLiveData<ArrayList<IngredientItem>>()
+        // get ingredient list
+        ingredientService.getList().enqueue(object : Callback<ArrayList<IngredientItem>> {
+            override fun onResponse(
+                call: Call<ArrayList<IngredientItem>>,
+                response: Response<ArrayList<IngredientItem>>
+            ) {
+                if (response.isSuccessful) {
+                    liveData.value = response.body()
+                    Log.i("get ingredient", response.body()?.size.toString())
+                }
+                else{
+                    liveData.value = arrayListOf()
+                    Log.i("get ingredient", response.body()?.size.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
+                liveData.value = arrayListOf()
+                Log.i("get ingredient", t.toString())
+            }
+        })
+        return liveData
+    }
+
 
     interface OnTaskFinish{
         fun onFinish(data: RecipeData)

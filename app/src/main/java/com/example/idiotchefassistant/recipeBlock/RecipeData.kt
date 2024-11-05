@@ -3,10 +3,10 @@ package com.example.idiotchefassistant.recipeBlock
 class RecipeData {
     val title: String = "Unknown"
     //    val author: String,
-    val description: String = ""
-    val video: String = ""
-    val rtype: String = ""
-    val score: Float? = null
+    val description: String? = null
+    val video: String? = null
+    val rtype: String? = null
+    val score: Float = 0.toFloat()
     val comments: ArrayList<Comment>? = null
     val iids: ArrayList<Int> = arrayListOf()
 }

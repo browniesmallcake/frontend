@@ -135,8 +135,9 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                     iids = list?.map {it.id}?.toTypedArray()!!
                     names = list.map { it.name }.toTypedArray()
                     mandarins  = list.map { it.mandarin }.toTypedArray()
-                    Log.i("ingredientService", "OK")
-                    val formattedNames = Array(names.size) { i -> "${mandarins[i]} ${names[i].replace("_", " ")}" }
+                    val formattedNames = Array(names.size) { i ->
+                        "${mandarins[i]} ${names[i].replace("_", " ")}"
+                    }
                     // 上傳每張圖片
                     photos?.forEach { p ->
                         val photoFile = File(p)

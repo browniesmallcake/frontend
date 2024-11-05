@@ -66,12 +66,15 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingTop="16dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
-        <!-- Community Comments Title -->
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/recipe_ingredients_item"
+            />
+
         <TextView
             android:id="@+id/community_title"
             android:layout_width="match_parent"
@@ -99,8 +102,9 @@
             android:textStyle="bold"
             android:text="@string/upload"/>
 
+        <!-- Community Comments Title -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewIngredients"
+            android:id="@+id/Comments"
             android:layout_width="350dp"
             android:layout_height="450dp"
             android:padding="10dp"

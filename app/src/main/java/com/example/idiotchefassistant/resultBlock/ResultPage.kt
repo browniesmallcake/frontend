@@ -103,7 +103,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
         val dialog = IngredientDialogFragment()
         dialog.setOnItemSelectedListener(this)
         isEditMode = true
-        editItemTitle = item.title
+        editItemTitle = item.name
         dialog.show(supportFragmentManager, "customDialog")
     }
 
@@ -140,15 +140,15 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             .setTitle("Confirm Delete")
             .setMessage("Are you sure you want to delete this item?")
             .setPositiveButton("Yes") { _, _ ->
-                if(!resultViewModel.findData(item.title)){
+                if(!resultViewModel.findData(item.name)){
                     AlertDialog.Builder(this)
                     .setTitle("Item Not Found")
-                    .setMessage("The item \"${item.title}\" does not exist in the list.")
+                    .setMessage("The item \"${item.name}\" does not exist in the list.")
                     .setPositiveButton("OK", null)
                     .show()
                 }
                 else {
-                    resultViewModel.deleteData(item.title)
+                    resultViewModel.deleteData(item.name)
                 }
                 adapter.updateItems(resultRepository.getData()?.result?.map { ResultItem(it.value.images, it.value.name) } ?: emptyList())
 

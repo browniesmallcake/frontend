@@ -21,7 +21,6 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchFactory: SearchFactory
     private lateinit var searchRepository: SearchRepository
-    private lateinit var adapter: RecipeItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +32,13 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         searchFactory = SearchFactory(searchRepository)
         searchViewModel = ViewModelProvider(this, searchFactory)[SearchViewModel::class.java]
 
-        adapter = RecipeItemAdapter(emptyList())
+        val adapter = RecipeItemAdapter(emptyList())
         adapter.setOnItemClickListener(this)
         binding.RecipeRecycleView.layoutManager = LinearLayoutManager(this)
         binding.RecipeRecycleView.adapter = adapter
 
 //      Observe live data
         searchViewModel.callBack().observe(this){data ->
-            Log.d("SearchPage", "Received items: ${data.list?.size ?: 0}")
             adapter.updateItems(data.list ?: emptyList())
         }
 

@@ -35,10 +35,7 @@ class IngredientDialogFragment : DialogFragment() {
         binding.listViewItems
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
-        ingredientViewModel = ViewModelProvider(
-            this,
-            ingredientFactory
-        )[IngredientViewModel::class.java]
+        ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
         // Set up the list and adapter
         ingredientViewModel.getData()

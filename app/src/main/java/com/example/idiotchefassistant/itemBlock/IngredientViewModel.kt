@@ -9,7 +9,9 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
     private var userLiveData = MutableLiveData<IngredientData>()
     private val ingredientObserver = Observer<ArrayList<IngredientItem>> { list ->
         if (list.isNotEmpty()) {
-            val names: Array<String> = list.map { it.name.replace("_", " ") }.toTypedArray()
+            val names: Array<String> = list.map {
+                it.name.replace("_", " ")
+            }.toTypedArray()
             val mandarins: Array<String> = list.map { it.mandarin }.toTypedArray()
             val zipArray = names.zip(mandarins) { name, mandarin -> "$mandarin $name" }.toTypedArray()
             ingredientRepository.setData(zipArray)
@@ -20,6 +22,7 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
             Log.i("IngredientViewModel", "Received empty data")
         }
     }
+
     fun callBack(): LiveData<IngredientData> {
         ingredientRepository.loadData(object : OnTaskFinish {
             override fun onFinish(data: IngredientData) {
@@ -38,17 +41,6 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
         ingredientRepository.switchData(isSeason)
     }
 
-    fun setData(newData: Array<String>) {
-        ingredientRepository.setData(newData)
-        val ingredientData = IngredientData()
-        if (newData.isNotEmpty()) {
-            ingredientData.ingredientNames = newData
-            userLiveData.postValue(ingredientData)
-        } else {
-            Log.i("ViewModel", "Received empty data")
-        }
-    }
-
     fun filterItems(query: String) {
         val allItems = ingredientRepository.getData()
         val data = IngredientData()
@@ -58,10 +50,5 @@ class IngredientViewModel(private var ingredientRepository: IngredientRepository
 
     fun getData() {
         ingredientRepository.getIngredients().observeForever(ingredientObserver)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        ingredientRepository.getIngredients().removeObserver(ingredientObserver)
     }
 }
