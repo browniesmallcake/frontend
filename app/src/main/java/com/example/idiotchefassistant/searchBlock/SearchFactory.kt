@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant.searchBlock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

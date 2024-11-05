@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant.searchBlock
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.MainActivity
 import com.example.idiotchefassistant.databinding.ActivitySearchPageBinding
+import com.example.idiotchefassistant.recipeBlock.RecipeItem
+import com.example.idiotchefassistant.recipeBlock.RecipeItemAdapter
+import com.example.idiotchefassistant.recipeBlock.RecipePage
 
 class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var binding: ActivitySearchPageBinding
@@ -19,6 +22,7 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var searchFactory: SearchFactory
     private lateinit var searchRepository: SearchRepository
     private lateinit var adapter: RecipeItemAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -93,6 +97,8 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
 
     override fun onItemClick(item: RecipeItem) {
         val intent = Intent(this, RecipePage::class.java)
+            .putExtra("rid", item.rid)
+        Log.i("rid","rid is: ${item.rid}")
         startActivity(intent)
     }
 }

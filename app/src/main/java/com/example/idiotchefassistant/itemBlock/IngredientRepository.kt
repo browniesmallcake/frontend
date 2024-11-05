@@ -3,7 +3,7 @@ package com.example.idiotchefassistant.itemBlock
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.idiotchefassistant.resultBlock.ingredientService
+import com.example.idiotchefassistant.ingredientService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

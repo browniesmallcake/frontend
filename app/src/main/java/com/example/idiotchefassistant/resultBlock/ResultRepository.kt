@@ -2,14 +2,11 @@ package com.example.idiotchefassistant.resultBlock
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.idiotchefassistant.itemBlock.IngredientItem
 import com.example.idiotchefassistant.recipeBlock.RecipeItem
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
+import com.example.idiotchefassistant.resultSearchService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import java.util.concurrent.Executors
 
 class ResultRepository {

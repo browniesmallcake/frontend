@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.databinding.ActivitySearchPageBinding
+import com.example.idiotchefassistant.recipeBlock.RecipeItem
+import com.example.idiotchefassistant.recipeBlock.RecipeItemAdapter
+import com.example.idiotchefassistant.recipeBlock.RecipePage
 
 class HistoryPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
     private lateinit var binding: ActivitySearchPageBinding

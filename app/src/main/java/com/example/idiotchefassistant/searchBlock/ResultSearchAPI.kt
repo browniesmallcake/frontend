@@ -1,5 +1,6 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant.searchBlock
 
+import com.example.idiotchefassistant.recipeBlock.RecipeItem
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

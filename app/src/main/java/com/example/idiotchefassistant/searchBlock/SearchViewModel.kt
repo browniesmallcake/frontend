@@ -1,7 +1,8 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant.searchBlock
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 
 class SearchViewModel(private var searchRepository: SearchRepository): ViewModel() {
@@ -66,4 +67,5 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
         }
         return isLastPage
     }
+
 }

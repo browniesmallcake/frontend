@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.idiotchefassistant.detectService
+import com.example.idiotchefassistant.ingredientService
 import com.example.idiotchefassistant.itemBlock.IngredientItem
 import com.example.idiotchefassistant.recipeBlock.RecipeItem
 import okhttp3.MultipartBody

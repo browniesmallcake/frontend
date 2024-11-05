@@ -23,7 +23,7 @@
             android:name=".resultBlock.ResultPage"
             android:exported="false"/>
         <activity
-            android:name=".recipeBlock.HistoryPage"
+            android:name=".HistoryPage"
             android:exported="false" />
         <activity
             android:name=".CameraPage"
@@ -32,7 +32,7 @@
             android:name=".recipeBlock.RecipePage"
             android:exported="false" />
         <activity
-            android:name=".recipeBlock.SearchPage"
+            android:name=".searchBlock.SearchPage"
             android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"

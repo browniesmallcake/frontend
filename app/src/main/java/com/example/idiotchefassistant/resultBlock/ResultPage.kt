@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
-import com.example.idiotchefassistant.recipeBlock.SearchPage
+import com.example.idiotchefassistant.searchBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
 import com.example.idiotchefassistant.itemBlock.IngredientFactory
 import com.example.idiotchefassistant.itemBlock.IngredientRepository

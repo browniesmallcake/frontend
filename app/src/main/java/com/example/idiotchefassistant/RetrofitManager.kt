@@ -1,8 +1,9 @@
-package com.example.idiotchefassistant.resultBlock
+package com.example.idiotchefassistant
 
 import DetectAPI
 import com.example.idiotchefassistant.itemBlock.IngredientAPI
-import com.example.idiotchefassistant.recipeBlock.ResultSearchAPI
+import com.example.idiotchefassistant.recipeBlock.RecipeAPI
+import com.example.idiotchefassistant.searchBlock.ResultSearchAPI
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -23,3 +24,4 @@ var retrofit: Retrofit = Retrofit.Builder()
 val detectService: DetectAPI = retrofit.create(DetectAPI::class.java)
 val ingredientService: IngredientAPI = retrofit.create(IngredientAPI::class.java)
 val resultSearchService: ResultSearchAPI = retrofit.create(ResultSearchAPI::class.java)
+val recipeService: RecipeAPI = retrofit.create(RecipeAPI::class.java)

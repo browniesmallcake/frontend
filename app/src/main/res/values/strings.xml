@@ -50,4 +50,7 @@
     <string name="enter_recipe_name">Enter recipe name</string>
     <string name="ingredients_in_recipe">Ingredients:</string>
     <string name="img_des">img</string>
+    <string name="leave_a_comment">Leave a comment</string>
+    <string name="community_title">Community Comments</string>
+    <string name="upload">上傳</string>
 </resources>

@@ -1,23 +1,25 @@
-package com.example.idiotchefassistant.recipeBlock
+package com.example.idiotchefassistant.searchBlock
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.idiotchefassistant.resultBlock.resultSearchService
+import com.example.idiotchefassistant.recipeBlock.RecipeItem
+import com.example.idiotchefassistant.resultSearchService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.Executors
 
 class SearchRepository {
-    private var nowData: MutableLiveData<SearchData> = MutableLiveData(SearchData())
+    private var liveData: MutableLiveData<SearchData> = MutableLiveData(SearchData())
+
     fun loadData(task: OnTaskFinish): MutableLiveData<SearchData>{
         Executors.newSingleThreadExecutor().submit{
             val data = SearchData()
-            data.list = nowData.value?.list
+            data.list = liveData.value?.list
             task.onFinish(data)
         }
-        return nowData
+        return liveData
     }
 
     fun searchByIids(offset: Int, iids: List<Int>): LiveData<List<RecipeItem>> {

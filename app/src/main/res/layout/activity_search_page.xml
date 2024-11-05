@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Style_color"
-    tools:context=".recipeBlock.SearchPage">
+    tools:context=".searchBlock.SearchPage">
 
     <RelativeLayout
         android:id="@+id/HeadBar"
@@ -57,8 +57,7 @@
             android:background="@color/white"
             android:inputType="text"
             android:autofillHints="autofill"
-            android:hint="@string/enter_recipe_name"
-            android:textColorHint="@color/black"/>
+            android:hint="@string/enter_recipe_name"/>
 
         <ImageView
             android:id="@+id/back_page"
