@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.resultBlock
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -40,6 +41,7 @@ class ResultItemAdapter(private var items: List<ResultItem>) :
             // binding image
             val imageUrl = "https://topic114.bntw.dev/${item.image.firstOrNull()}"
             binding.itemImage.load(imageUrl)
+            Log.i("Result image", imageUrl)
             editButton.setOnClickListener {
                 itemClickListener?.onEditClick(item)
             }

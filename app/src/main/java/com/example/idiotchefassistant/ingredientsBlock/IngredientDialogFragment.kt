@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.itemBlock
+package com.example.idiotchefassistant.ingredientsBlock
 
 import android.annotation.SuppressLint
 import android.os.Bundle

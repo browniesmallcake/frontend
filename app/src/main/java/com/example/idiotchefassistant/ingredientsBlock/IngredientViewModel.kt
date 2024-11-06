@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.itemBlock
+package com.example.idiotchefassistant.ingredientsBlock
 
 import android.util.Log
 import androidx.lifecycle.LiveData

@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.itemBlock
+package com.example.idiotchefassistant.ingredientsBlock
 
 import retrofit2.http.GET
 import retrofit2.Call

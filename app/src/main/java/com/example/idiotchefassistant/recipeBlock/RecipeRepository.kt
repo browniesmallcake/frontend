@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.idiotchefassistant.ingredientService
-import com.example.idiotchefassistant.itemBlock.IngredientItem
+import com.example.idiotchefassistant.ingredientsBlock.IngredientItem
 import com.example.idiotchefassistant.recipeService
 import retrofit2.Call
 import retrofit2.Callback

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.idiotchefassistant.detectService
 import com.example.idiotchefassistant.ingredientService
-import com.example.idiotchefassistant.itemBlock.IngredientItem
+import com.example.idiotchefassistant.ingredientsBlock.IngredientItem
 import com.example.idiotchefassistant.recipeBlock.RecipeItem
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -44,6 +44,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
     }
 
     fun addData(title: String, images: ArrayList<String>) {
+        var imageToken = images
         if (!validateIdsAndNames()) return
         if (iids.isEmpty() || names.isEmpty()) {
             Log.e("addData", "iids or names not initialized")
@@ -56,7 +57,10 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             Log.e("addData", "Title not found in names")
             return
         }
-        currentMap[iids[index]] = IngItem(title, images)
+        if (imageToken.isEmpty()) {
+            imageToken = arrayListOf("img/${iids[index]}.jpg")
+        }
+        currentMap[iids[index]] = IngItem(title, imageToken)
         currentData.result = currentMap
         resultRepository.uploadData(currentData)
     }
@@ -76,6 +80,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             return
         }
         val ingItem = currentMap[iids[oldIndex]]
+
         if (ingItem != null) {
             val newItem = IngItem(newName, ingItem.images)
             currentMap.remove(iids[oldIndex])

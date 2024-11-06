@@ -10,12 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import com.example.idiotchefassistant.itemBlock.IngredientDialogFragment
+import com.example.idiotchefassistant.ingredientsBlock.IngredientDialogFragment
 import com.example.idiotchefassistant.searchBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityResultPageBinding
-import com.example.idiotchefassistant.itemBlock.IngredientFactory
-import com.example.idiotchefassistant.itemBlock.IngredientRepository
-import com.example.idiotchefassistant.itemBlock.IngredientViewModel
+import com.example.idiotchefassistant.ingredientsBlock.IngredientFactory
+import com.example.idiotchefassistant.ingredientsBlock.IngredientRepository
+import com.example.idiotchefassistant.ingredientsBlock.IngredientViewModel
 
 class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, IngredientDialogFragment.OnItemSelectedListener {
     private lateinit var binding: ActivityResultPageBinding
@@ -128,7 +128,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
             } else {
                 resultViewModel.addData(
                     itemName.toString(),
-                    arrayListOf("app/src/main/res/drawable/logo.png")
+                    arrayListOf()
                 ) // Pass the image path here
             }
         }
