@@ -31,9 +31,10 @@ class SearchRepository {
             ){
                 if(response.isSuccessful){
                     liveData.postValue(response.body())
+                    Log.i("searchByIds","SearchRepository Successful:${response.body().toString()}")
                 }
                 else{
-                    Log.i("searchByIds","Failed:${response.code()} ${response.message()}")
+                    Log.i("searchByIds","SearchRepository Failed:${response.code()} ${response.message()}")
                     liveData.postValue(emptyList())
                 }
             }
@@ -56,9 +57,10 @@ class SearchRepository {
             ){
                 if(response.isSuccessful){
                     liveData.postValue(response.body())
+                    Log.i("searchByKeyword","SearchRepository Successful:${response.body().toString()}")
                 }
                 else{
-                    Log.i("searchByKeyword","Failed:${response.code()} ${response.message()}")
+                    Log.i("searchByKeyword","SearchRepository Failed:${response.code()} ${response.message()}")
                     liveData.postValue(emptyList())
                 }
             }

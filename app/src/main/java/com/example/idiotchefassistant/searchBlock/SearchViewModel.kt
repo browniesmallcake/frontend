@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.searchBlock
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -41,6 +42,7 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
 
     fun setKeyword(newKeyword: String){
         _keyword.value = newKeyword
+        Log.i("SVM", "Now keyword: ${_keyword.value}")
     }
 
     fun setIids(nowIids: List<Int>){
@@ -49,6 +51,7 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
 
     fun keywordSearch(){
         searchByIds = false
+        Log.i("SVM", "Search keyword by: (${_nowOffset.value}, ${_keyword.value})")
         search()
     }
 
@@ -58,7 +61,7 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
             searchRepository.searchByIids(_nowOffset.value!!, iids)
         }
         else{
-            searchRepository.searchByKeyword(_nowOffset.value!!, keyword.toString())
+            searchRepository.searchByKeyword(_nowOffset.value!!, _keyword.value!!)
         }
         liveData.observeForever { result ->
             recipeIsNull = result.isNullOrEmpty()

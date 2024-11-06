@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class RecipeItem(
     val rid:Int,
     val title:String,
-    val link:String?,
+    val link:String,
     val score:Int
 ): Parcelable
 
