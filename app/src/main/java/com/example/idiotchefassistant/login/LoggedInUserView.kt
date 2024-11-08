@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ui.login
+package com.example.idiotchefassistant.login
 
 /**
  * User details post authentication that is exposed to the UI

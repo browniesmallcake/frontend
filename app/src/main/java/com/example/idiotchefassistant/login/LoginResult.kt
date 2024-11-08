@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ui.login
+package com.example.idiotchefassistant.login
 
 /**
  * Authentication result : success (user details) or error message.

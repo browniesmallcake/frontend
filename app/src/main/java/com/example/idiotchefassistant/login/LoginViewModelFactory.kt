@@ -1,19 +1,13 @@
-package com.example.idiotchefassistant.ui.login
+package com.example.idiotchefassistant.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.idiotchefassistant.data.LoginDataSource
-import com.example.idiotchefassistant.data.LoginRepository
 
-/**
- * ViewModel provider factory to instantiate LoginViewModel.
- * Required given LoginViewModel has a non-empty constructor
- */
 class LoginViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(LoginDataSource::class.java)) {
             return LoginViewModel(
                 loginRepository = LoginRepository(
                     dataSource = LoginDataSource()

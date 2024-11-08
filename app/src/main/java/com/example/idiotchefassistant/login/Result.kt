@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.data
+package com.example.idiotchefassistant.login
 
 /**
  * A generic class that holds a value with its loading status.

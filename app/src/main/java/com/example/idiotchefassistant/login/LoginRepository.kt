@@ -1,18 +1,11 @@
-package com.example.idiotchefassistant.data
+package com.example.idiotchefassistant.login
 
 import com.example.idiotchefassistant.data.model.LoggedInUser
 
-/**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
- */
-
 class LoginRepository(val dataSource: LoginDataSource) {
-
     // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null
         private set
-
     val isLoggedIn: Boolean
         get() = user != null
 
@@ -30,11 +23,9 @@ class LoginRepository(val dataSource: LoginDataSource) {
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
         val result = dataSource.login(username, password)
-
         if (result is Result.Success) {
             setLoggedInUser(result.data)
         }
-
         return result
     }
 

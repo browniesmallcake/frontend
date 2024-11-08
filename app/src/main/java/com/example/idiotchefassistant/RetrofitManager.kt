@@ -1,6 +1,7 @@
 package com.example.idiotchefassistant
 
 import DetectAPI
+import com.example.idiotchefassistant.data.retrofit.endpoints.User
 import com.example.idiotchefassistant.ingredientsBlock.IngredientAPI
 import com.example.idiotchefassistant.recipeBlock.RecipeAPI
 import com.example.idiotchefassistant.searchBlock.ResultSearchAPI
@@ -25,3 +26,4 @@ val detectService: DetectAPI = retrofit.create(DetectAPI::class.java)
 val ingredientService: IngredientAPI = retrofit.create(IngredientAPI::class.java)
 val resultSearchService: ResultSearchAPI = retrofit.create(ResultSearchAPI::class.java)
 val recipeService: RecipeAPI = retrofit.create(RecipeAPI::class.java)
+val userService: User = retrofit.create(User::class.java)

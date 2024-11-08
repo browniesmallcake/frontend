@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.data
+package com.example.idiotchefassistant.login
 
 import com.example.idiotchefassistant.data.model.LoggedInUser
 import java.io.IOException

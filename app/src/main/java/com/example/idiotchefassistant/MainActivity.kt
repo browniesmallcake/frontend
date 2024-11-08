@@ -12,7 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.idiotchefassistant.searchBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
-import com.example.idiotchefassistant.ui.login.LoginActivity
+import com.example.idiotchefassistant.login.LoginActivity
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

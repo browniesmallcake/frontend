@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.ui.login
+package com.example.idiotchefassistant.login
 
 /**
  * Data validation state of the login form.
