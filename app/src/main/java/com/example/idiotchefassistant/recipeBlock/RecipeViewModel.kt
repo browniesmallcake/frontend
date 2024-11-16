@@ -2,7 +2,6 @@ package com.example.idiotchefassistant.recipeBlock
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 
 class RecipeViewModel(private var recipeRepository: RecipeRepository):ViewModel() {

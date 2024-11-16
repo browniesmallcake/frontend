@@ -39,7 +39,7 @@
             android:autofillHints="autofill"
             android:padding="12dp"
             android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeActionLabel="@string/action_sign_in"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:selectAllOnFocus="true"

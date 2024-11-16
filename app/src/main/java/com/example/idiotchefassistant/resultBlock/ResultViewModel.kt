@@ -14,9 +14,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import com.example.idiotchefassistant.resultBlock.ResultRepository.OnTaskFinish
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 
-class ResultViewModel(private var resultRepository: ResultRepository): ViewModel() {
+class ResultViewModel(private var resultRepository: ResultRepository) : ViewModel() {
     private var userLiveData = MutableLiveData<ResultData>()
     private val _isUploading = MutableLiveData<Boolean>()
     val isUploading: LiveData<Boolean> get() = _isUploading
@@ -50,7 +51,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             Log.e("addData", "iids or names not initialized")
             return
         }
-        val currentData = resultRepository.getData()?: ResultData()
+        val currentData = resultRepository.getData() ?: ResultData()
         val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
         val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
         if (index == -1) {
@@ -71,7 +72,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             Log.e("editData", "iids or names not initialized")
             return
         }
-        val currentData = resultRepository.getData()?: ResultData()
+        val currentData = resultRepository.getData() ?: ResultData()
         val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
         val oldIndex = names.indexOfFirst { it.equals(oldName, ignoreCase = true) }
         val newIndex = names.indexOfFirst { it.equals(newName, ignoreCase = true) }
@@ -96,7 +97,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             Log.e("deleteData", "iids or names not initialized")
             return
         }
-        val currentData = resultRepository.getData()?: ResultData()
+        val currentData = resultRepository.getData() ?: ResultData()
         val currentMap = currentData.result?.toMutableMap() ?: return
         val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
         if (index == -1) {
@@ -114,7 +115,7 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             Log.e("findData", "iids or names not initialized")
             return false
         }
-        val currentData = resultRepository.getData()?: ResultData()
+        val currentData = resultRepository.getData() ?: ResultData()
         val currentMap = currentData.result?.toMutableMap() ?: mutableMapOf()
         val index = names.indexOfFirst { it.equals(title, ignoreCase = true) }
         if (index == -1) {
@@ -137,46 +138,47 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
             ) {
                 if (response.isSuccessful) {
                     val list = response.body()
-                    iids = list?.map {it.id}?.toTypedArray()!!
+                    iids = list?.map { it.id }?.toTypedArray()!!
                     names = list.map { it.name }.toTypedArray()
-                    mandarins  = list.map { it.mandarin }.toTypedArray()
+                    mandarins = list.map { it.mandarin }.toTypedArray()
                     val formattedNames = Array(names.size) { i ->
                         "${mandarins[i]} ${names[i].replace("_", " ")}"
                     }
-                    // 上傳每張圖片
-                    photos?.forEach { p ->
-                        val photoFile = File(p)
-                        val requestFile = photoFile.asRequestBody(MultipartBody.FORM)
-                        val body = MultipartBody.Part.createFormData("image", photoFile.name, requestFile)
-                        detectService.detect(body).enqueue(object : Callback<HashMap<String, String>> {
+
+                    val files: List<File> = photos?.map { File(it) } ?: listOf()
+                    val multipartBodyParts: MutableList<MultipartBody.Part> = mutableListOf()
+                    files.forEach { file ->
+                        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                        multipartBodyParts.add(
+                            MultipartBody.Part.createFormData(
+                                "files",
+                                file.name,
+                                requestFile
+                            )
+                        )
+                    }
+                    detectService.detectByGAI(multipartBodyParts)
+                        .enqueue(object : Callback<Array<String>> {
                             // call API 取得辨識結果
                             override fun onResponse(
-                                call: Call<HashMap<String, String>>,
-                                response: Response<HashMap<String, String>>
+                                call: Call<Array<String>>,
+                                response: Response<Array<String>>
                             ) {
                                 if (response.isSuccessful) {
-                                    val map = response.body()
+                                    val results = response.body()
                                     // 遍歷 detectService 回傳的結果，根據 names 比對 iids 並更新 finalMap
-                                    map?.forEach { (key, value) ->
-                                        val index = names.indexOfFirst { it.equals(key, ignoreCase = true) }
-                                        if(index != -1){
+                                    results?.forEach { r ->
+                                        val index =
+                                            names.indexOfFirst { it.equals(r, ignoreCase = true) }
+                                        if (index != -1) {
                                             val iid = iids[index]
-                                            val currentIngItem = finalMap[iid]
-
-                                            if(currentIngItem != null){
-                                                // 如果 finalMap 已經有這個 iid，則更新 images 列表
-                                                val updatedImages = currentIngItem.images
-                                                updatedImages.add(value)
-                                                val updatedItem = IngItem(currentIngItem.name, updatedImages)
-                                                finalMap[iid] = updatedItem
-                                            }
-                                            else{
-                                                val newName = "${mandarins[index]} ${names[index]}".replace("_", " ")
-                                                finalMap[iid] = IngItem(newName, arrayListOf(value))
-                                            }
-                                            Log.i("detectService", "Added image for name: $key with iid: $iid")
-                                        } else{
-                                            Log.w("detectService", "No matching iid found for name: $key")
+                                            val newName =
+                                                "${mandarins[index]} ${names[index]}".replace(
+                                                    "_",
+                                                    " "
+                                                )
+                                            finalMap[iid] =
+                                                IngItem(newName, arrayListOf(iid.toString()))
                                         }
                                     }
                                     completedRequests++
@@ -190,16 +192,24 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                                         _isUploading.postValue(false)
                                         names = formattedNames
                                     }
-                                } else{
-                                    Log.e("detectService", "Failed to detect: ${response.message()}")
+                                } else {
+                                    Log.e(
+                                        "detectService",
+                                        "Failed to detect: ${response.code()} ${response.message()}"
+                                    )
                                     handleFailure()
                                 }
                             }
-                            override fun onFailure(call: Call<HashMap<String, String>>, t: Throwable) {
+
+                            override fun onFailure(
+                                call: Call<Array<String>>,
+                                t: Throwable
+                            ) {
                                 Log.e("detectService", "Request failed: ${t.message}")
                                 handleFailure()
                             }
-                            private fun handleFailure(){
+
+                            private fun handleFailure() {
                                 completedRequests++
                                 if (completedRequests == totalRequests) {
                                     _uploadResult.postValue(false)
@@ -207,16 +217,16 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
                                 }
                             }
                         })
-                    }
-                    if(totalRequests == 0){
+                    if (totalRequests == 0) {
                         _isUploading.postValue(false)
                         _uploadResult.postValue(false)
                     }
-                }else{
+                } else {
                     Log.e("ingredientService", "Failed to get ingredients: ${response.message()}")
                     _isUploading.postValue(false)
                 }
             }
+
             override fun onFailure(call: Call<ArrayList<IngredientItem>>, t: Throwable) {
                 Log.e("ingredientService", "Request failed: ${t.message}")
                 _isUploading.postValue(false)
@@ -224,10 +234,10 @@ class ResultViewModel(private var resultRepository: ResultRepository): ViewModel
         })
     }
 
-    fun resultSearch(): LiveData<List<RecipeItem>>{
+    fun resultSearch(): LiveData<List<RecipeItem>> {
         val liveData = MutableLiveData<List<RecipeItem>>()
-        val iids = resultRepository.getData()?.result?.keys?.toList()?: emptyList()
-        if(iids.isEmpty()){
+        val iids = resultRepository.getData()?.result?.keys?.toList() ?: emptyList()
+        if (iids.isEmpty()) {
             liveData.postValue(emptyList())
             return liveData
         }

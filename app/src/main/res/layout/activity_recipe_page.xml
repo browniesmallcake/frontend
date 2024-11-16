@@ -72,8 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/recipe_ingredients_item"
-            />
+            tools:listitem="@layout/recipe_ingredients_item" />
 
         <TextView
             android:id="@+id/community_title"

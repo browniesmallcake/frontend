@@ -6,8 +6,8 @@ import retrofit2.http.Part
 
 interface DetectAPI {
     @Multipart
-    @POST("/detect/latest/img")
-    fun detect(
-        @Part("") image: MultipartBody.Part
-    ): Call<HashMap<String,String>>
+    @POST("/detect/gemini")
+    fun detectByGAI(
+        @Part files: List<MultipartBody.Part>
+    ): Call<Array<String>>
 }

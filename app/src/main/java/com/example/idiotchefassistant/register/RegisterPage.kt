@@ -37,8 +37,8 @@ class RegisterPage : AppCompatActivity() {
         registerViewModel.registerFormState.observe(this@RegisterPage, Observer {
             val registerState = it ?: return@Observer
             register.isEnabled = registerState.isDataValid
-            if (registerState.usernameError != null) {
-                email.error = getString(registerState.usernameError)
+            if (registerState.emailError != null) {
+                email.error = getString(registerState.emailError)
             }
             if (registerState.passwordError != null) {
                 password.error = getString(registerState.passwordError)

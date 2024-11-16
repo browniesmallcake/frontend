@@ -25,11 +25,15 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
 
     fun registerDataChange(infoData: RegisterData) {
        if(!isEmailValid(infoData.email)){
-           _registerForm.value = RegisterFormState(emailError = R.string.invalid_username)
-       } else if (!isPasswordValid(infoData.password)) {
+           _registerForm.value = RegisterFormState(emailError = R.string.invalid_email)
+       }
+        else if (!isPasswordValid(infoData.password)) {
            _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password)
-       } else if (!isPasswordRetypeValid(infoData.password, infoData.passwordRetype)) {
-           _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password_retype)
+       }
+        else if (!isPasswordRetypeValid(infoData.password, infoData.passwordRetype)) {
+           _registerForm.value = RegisterFormState(passwordRtypeError = R.string.invalid_password_retype)
+       } else{
+           _registerForm.value = RegisterFormState(isDataValid = true)
        }
     }
 

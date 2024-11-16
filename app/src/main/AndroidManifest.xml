@@ -37,6 +37,10 @@
         <activity
             android:name=".login.LoginActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".register.RegisterPage"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
