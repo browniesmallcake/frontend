@@ -178,7 +178,7 @@ class ResultViewModel(private var resultRepository: ResultRepository) : ViewMode
                                                     " "
                                                 )
                                             finalMap[iid] =
-                                                IngItem(newName, arrayListOf(iid.toString()))
+                                                IngItem(newName, arrayListOf("$iid.jpg"))
                                         }
                                     }
                                     completedRequests++
