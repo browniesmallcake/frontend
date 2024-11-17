@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(
             this,
-            LoginViewModelFactory()
+            LoginViewModelFactory(applicationContext)
         )[LoginViewModel::class.java]
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {

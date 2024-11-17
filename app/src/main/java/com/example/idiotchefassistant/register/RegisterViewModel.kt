@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant.register
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,18 +10,10 @@ import com.example.idiotchefassistant.R
 class RegisterViewModel(private val registerRepository: RegisterRepository) : ViewModel() {
     private val _registerForm = MutableLiveData<RegisterFormState>()
     val registerFormState: LiveData<RegisterFormState> = _registerForm
-    private val _registerResult = MutableLiveData<String>()
-    val registerResult: LiveData<String> = _registerResult
+    val registerResult: LiveData<String> = registerRepository.message
 
-
-    fun register(infoData: RegisterData){
-        val result = registerRepository.register(infoData).message
-        if(result.isNotEmpty()){
-            _registerResult.value = result
-        }
-        else{
-            _registerResult.value = "註冊失敗"
-        }
+    fun register(data: RegisterData){
+        registerRepository.register(data)
     }
 
     fun registerDataChange(infoData: RegisterData) {

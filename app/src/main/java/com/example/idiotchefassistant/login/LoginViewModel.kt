@@ -3,21 +3,29 @@ package com.example.idiotchefassistant.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.idiotchefassistant.AuthTokenManager
 import com.example.idiotchefassistant.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(
+    private val loginRepository: LoginRepository,
+    authTokenManager: AuthTokenManager
+) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
-
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    private val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     fun login(username: String, password: String) {
-        val result = loginRepository.login(username, password)
-        if (result is Result.Success) {
+        loginRepository.login(username, password)
+        if (loginRepository.data.value?.token?.isNotEmpty() == true) {
             _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                LoginResult(success = LoggedInUserView(displayName = "Unknown"))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
@@ -45,5 +53,14 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    init {
+        loginRepository.setScope(viewModelScope)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }
