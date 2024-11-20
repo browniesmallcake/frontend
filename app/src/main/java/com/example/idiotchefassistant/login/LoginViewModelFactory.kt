@@ -12,7 +12,7 @@ class LoginViewModelFactory(private val context: Context) : ViewModelProvider.Fa
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             val authTokenManager = AuthTokenManager(context)
             val loginRepository = LoginRepository(authTokenManager)
-            return LoginViewModel(loginRepository, authTokenManager) as T
+            return LoginViewModel(loginRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

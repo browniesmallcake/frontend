@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant.data.retrofit.endpoints
+package com.example.idiotchefassistant
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
@@ -23,10 +23,9 @@ data class RegisterRequestBody(
 )
 
 data class UserResponse(
-    val id:Int,
-    val username:String,
     val email:String,
-    val level:Int
+    val level:Int,
+    val username:String
 )
 
 data class MessageResponse(

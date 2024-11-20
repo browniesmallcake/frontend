@@ -51,19 +51,15 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
+        loginViewModel.loginResult.observe(this@LoginActivity) { result ->
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
+            Toast.makeText(applicationContext, result, Toast.LENGTH_SHORT).show()
+            if (result.contains("登入")) {
+                setResult(Activity.RESULT_OK)
+                finish()
+                updateUiWithUser()
             }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
-            //Complete and destroy login activity once successful
-            finish()
-        })
+        }
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -100,10 +96,9 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    private fun updateUiWithUser() {
         val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
+        val displayName = loginViewModel.user.value?.username
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
@@ -111,9 +106,6 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-    }
 }
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {

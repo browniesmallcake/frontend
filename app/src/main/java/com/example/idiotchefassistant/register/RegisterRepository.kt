@@ -2,8 +2,8 @@ package com.example.idiotchefassistant.register
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.idiotchefassistant.data.retrofit.endpoints.MessageResponse
-import com.example.idiotchefassistant.data.retrofit.endpoints.RegisterRequestBody
+import com.example.idiotchefassistant.MessageResponse
+import com.example.idiotchefassistant.RegisterRequestBody
 import com.example.idiotchefassistant.userService
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,7 +14,6 @@ class RegisterRepository {
 
     fun register(data: RegisterData){
         val registerRequestBody = RegisterRequestBody(data.name, data.password, data.email)
-        Log.i("Register Service R", "${data.name} ${data.password} ${data.email}")
         userService.register(registerRequestBody).enqueue(
             object : Callback<MessageResponse> {
                 override fun onResponse(
@@ -27,11 +26,11 @@ class RegisterRepository {
                     }
                     else if(response.code() == 409){
                         val errorMessage = response.errorBody()?.string() ?: "該名稱或信箱已註冊"
-                        Log.i("Register Service", "Conflict: $errorMessage")
+                        Log.e("Register Service", "Conflict: $errorMessage")
                         message.postValue("註冊失敗: $errorMessage")
                     }
                     else{
-                        Log.i("Register Service","API Failed:${response.code()} ${response.message()}")
+                        Log.e("Register Service","API Failed:${response.code()} ${response.message()}")
                         message.postValue("註冊失敗")
                     }
                 }

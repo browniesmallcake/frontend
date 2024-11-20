@@ -1,6 +1,5 @@
 package com.example.idiotchefassistant.register
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

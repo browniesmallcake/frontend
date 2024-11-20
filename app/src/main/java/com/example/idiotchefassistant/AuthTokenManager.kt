@@ -12,11 +12,10 @@ class AuthTokenManager(private val context: Context) {
     private val tokenKey = stringPreferencesKey("auth_token")
 
     // Read the token
-    val authToken: Flow<String?>
-        get() = context.dataStore.data
-            .map { preferences ->
-                preferences[tokenKey]
-            }
+    val authToken: Flow<String?> = context.dataStore.data
+        .map { preferences ->
+            preferences[tokenKey]
+        }
 
     // save the token
     suspend fun saveAuthToken(token: String) {

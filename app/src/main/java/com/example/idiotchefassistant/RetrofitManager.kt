@@ -1,7 +1,6 @@
 package com.example.idiotchefassistant
 
 import DetectAPI
-import com.example.idiotchefassistant.data.retrofit.endpoints.User
 import com.example.idiotchefassistant.ingredientsBlock.IngredientAPI
 import com.example.idiotchefassistant.recipeBlock.RecipeAPI
 import com.example.idiotchefassistant.searchBlock.ResultSearchAPI
