@@ -37,7 +37,9 @@ class RecipePage : AppCompatActivity() {
 
         recipeViewModel.callBack().observe(this) { data ->
             Log.d("SearchPage", "Received items: $data")
+            // name
             binding.recipeName.text = data?.title ?: "Unknown"
+            // video link
             val imageLink = recipeViewModel.link2Image(data?.video)
             binding.recipeImage.load(imageLink)
             imageLink.let {
@@ -49,15 +51,21 @@ class RecipePage : AppCompatActivity() {
             binding.recipeImage.setOnClickListener{
                 openYoutube(this, data.video.toString())
             }
+            // score
             val floatValue: Float = (data?.score ?: 0).toFloat()
             binding.recipeReviewNum.text = floatValue.toString()
             binding.recipeReviewStar.rating = floatValue
-            // create ingredients adapter
+            // ingredients
             recipeViewModel.getIngredients(data.iids).observe(this) { ingredients ->
                 val adapter = RecipeIngredientsAdapter(ingredients)
                 binding.ingredients.layoutManager = LinearLayoutManager(this)
                 binding.ingredients.adapter = adapter
             }
+        }
+
+        // comments
+        binding.postButton.setOnClickListener{
+
         }
     }
 

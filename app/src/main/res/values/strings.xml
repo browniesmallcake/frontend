@@ -60,4 +60,5 @@
     <string name="register_title">註冊帳號</string>
     <string name="prompt_password_retype">重新輸入密碼</string>
     <string name="remind_login">尚未登入?</string>
+    <string name="post_comment">撰寫評論</string>
 </resources>

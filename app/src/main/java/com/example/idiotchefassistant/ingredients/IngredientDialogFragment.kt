@@ -35,21 +35,33 @@ class IngredientDialogFragment : DialogFragment() {
         binding.listViewItems
         ingredientRepository = IngredientRepository()
         ingredientFactory = IngredientFactory(ingredientRepository)
-        ingredientViewModel = ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
+        ingredientViewModel =
+            ViewModelProvider(this, ingredientFactory)[IngredientViewModel::class.java]
 
         // Set up the list and adapter
         ingredientViewModel.getData()
-        val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent)
-                if (position == selectedPosition) {
-                    v.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_orange_light))
-                } else {
-                    v.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
+        val adapter =
+            object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val v = super.getView(position, convertView, parent)
+                    if (position == selectedPosition) {
+                        v.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                android.R.color.holo_orange_light
+                            )
+                        )
+                    } else {
+                        v.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                android.R.color.transparent
+                            )
+                        )
+                    }
+                    return v
                 }
-                return v
             }
-        }
 
         binding.listViewItems.adapter = adapter
         ingredientViewModel.callBack().observe(viewLifecycleOwner) { ingredientData ->
@@ -59,9 +71,9 @@ class IngredientDialogFragment : DialogFragment() {
             adapter.notifyDataSetChanged()
         }
 
-        binding.buttonSwitch.setOnClickListener{
+        binding.buttonSwitch.setOnClickListener {
             isSeason = !isSeason
-            if(isSeason)
+            if (isSeason)
                 binding.buttonSwitch.text = "尋找食材"
             else
                 binding.buttonSwitch.text = "尋找調味料"
@@ -77,11 +89,13 @@ class IngredientDialogFragment : DialogFragment() {
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 adapter.notifyDataSetChanged()
                 val query = s.toString()
                 ingredientViewModel.filterItems(query)
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
