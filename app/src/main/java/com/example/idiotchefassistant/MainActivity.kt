@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, HomePage()).commit()
 
             R.id.nav_history -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomePage()).commit()
+                .replace(R.id.fragment_container, HistoryPage()).commit()
 
             R.id.nav_info -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HomePage()).commit()
@@ -92,6 +92,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
+            R.id.nav_logout -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

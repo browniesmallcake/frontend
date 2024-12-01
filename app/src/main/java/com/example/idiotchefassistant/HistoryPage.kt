@@ -2,40 +2,82 @@ package com.example.idiotchefassistant
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.idiotchefassistant.databinding.ActivitySearchPageBinding
+import com.example.idiotchefassistant.databinding.FragmentHistoryPageBinding
 import com.example.idiotchefassistant.recipeBlock.RecipeItem
 import com.example.idiotchefassistant.recipeBlock.RecipeItemAdapter
 import com.example.idiotchefassistant.recipeBlock.RecipePage
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class HistoryPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
-    private lateinit var binding: ActivitySearchPageBinding
+class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
+    private var _binding: FragmentHistoryPageBinding? = null
+    private val binding get() = _binding!!
+    private val _historyItems = MutableLiveData<List<RecipeItem>>()
+    private var historyItems: LiveData<List<RecipeItem>> = _historyItems
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-//        setContentView(R.layout.activity_search_page)
-        binding = ActivitySearchPageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHistoryPageBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        binding.SearchBtn.setOnClickListener {
-            val intent = Intent(this, HistoryPage::class.java)
-            startActivity(intent)
+        history()
+        val items = arrayListOf<RecipeItem>()
+        historyItems.observe(viewLifecycleOwner){ data ->
+            items.addAll(data)
         }
-        binding.EditText
-        val item = mutableListOf<RecipeItem>()
-        val recycleView = binding.RecipeRecycleView
-        recycleView.layoutManager = LinearLayoutManager(this)
 
-        val adapter = RecipeItemAdapter(item)
+        val recycleView = binding.RecipeRecycleView
+        recycleView.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = RecipeItemAdapter(items)
         adapter.setOnItemClickListener(this)
         recycleView.adapter = adapter
+
+        return view
+    }
+
+    private fun history(){
+        userDataService.history().enqueue(object :
+            Callback<List<RecipeItem>> {
+            override fun onResponse(
+                call: Call<List<RecipeItem>>,
+                response: Response<List<RecipeItem>>
+            ) {
+                if (response.isSuccessful) {
+                    _historyItems.postValue(response.body())
+                    Log.i("userHistory","Success:${response.body().toString()}")
+                } else {
+                    Log.i("userHistory","Failed:${response.code()} ${response.message()}")
+                    _historyItems.postValue(emptyList())
+                }
+            }
+
+            override fun onFailure(call: Call<List<RecipeItem>>, t: Throwable) {
+                Log.e("userHistory", "API call failed: ${t.message}")
+                _historyItems.postValue(emptyList())
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onItemClick(item: RecipeItem) {
-        val intent = Intent(this, RecipePage::class.java)
+        val intent = Intent(activity, RecipePage::class.java)
         startActivity(intent)
     }
 }

@@ -55,6 +55,12 @@ class SearchViewModel(private var searchRepository: SearchRepository): ViewModel
         search()
     }
 
+    fun iidsSearch(){
+        searchByIds = true
+        Log.i("SVM", "Search iids by: (${_nowOffset.value}, ${iids})")
+        search()
+    }
+
     private fun search(): LiveData<Boolean>{
         val isLastPage = MutableLiveData<Boolean>()
         val liveData = if (searchByIds){

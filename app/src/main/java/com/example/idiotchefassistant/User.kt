@@ -1,5 +1,6 @@
 package com.example.idiotchefassistant
 
+import com.example.idiotchefassistant.recipeBlock.RecipeItem
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
@@ -32,14 +33,6 @@ data class MessageResponse(
     val message:String
 )
 
-data class SearchResponse(
-    val id:Int,
-    val name:String,
-    val description:String,
-    @SerializedName("video_link")  val videoLink:String,
-    val rtype:Int
-)
-
 interface User {
 
     @POST("/user/login")
@@ -56,17 +49,13 @@ interface User {
     ): Call<MessageResponse>
 
     @GET("/user/logout/all")
-    fun logoutAll(
-        @Header("X-API-Key") token:String
-    ): Call<MessageResponse>
+    fun recommend(): Call<MessageResponse>
 
     @POST("/user/register")
     fun register(
         @Body registerRequestBody: RegisterRequestBody
     ): Call<MessageResponse>
 
-    @GET("/user/searches")
-    fun searches(
-        @Header("X-API-Key") token:String
-    ): Call<SearchResponse>
+    @GET("/user/history")
+    fun history (): Call<List<RecipeItem>>
 }

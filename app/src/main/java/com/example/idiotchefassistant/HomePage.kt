@@ -15,8 +15,10 @@ import com.example.idiotchefassistant.recipeBlock.RecipePage
 class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
     private var _binding: FragmentHomePageBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
@@ -37,6 +39,7 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
 
         return view
     }
+
     private fun generateFakeData(): List<RecipeItem> {
         val fakeData = mutableListOf<RecipeItem>()
         for (i in 1..10) {
@@ -44,6 +47,12 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         }
         return fakeData
     }
+
+    private fun recommend(): List<RecipeItem>{
+        val data = mutableListOf<RecipeItem>()
+        return data
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

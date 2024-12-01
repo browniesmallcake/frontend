@@ -43,17 +43,9 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         }
 
 //      upload recycleView
-        val rItems = intent.getParcelableArrayListExtra<RecipeItem>("rItems")
-        val item = mutableListOf<RecipeItem>()
-        rItems?.forEach { r ->
-            item.add(RecipeItem(r.rid, r.title, r.link, r.score))
-        }
         val iids = intent.getIntegerArrayListExtra("iids")?: emptyList<Int>()
         searchViewModel.setIids(iids.toList())
-
-        val searchData = SearchData()
-        searchData.list = ArrayList(item)
-        searchViewModel.uploadData(searchData)
+        searchViewModel.iidsSearch()
 
         binding.HomeBtn.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
