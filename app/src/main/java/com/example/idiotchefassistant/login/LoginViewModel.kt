@@ -16,7 +16,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginResult: LiveData<String> = loginRepository.message
-    val loginIsValid: LiveData<Boolean> = loginRepository.isLogin
     val user: LiveData<UserResponse> = loginRepository.user
 
     private val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())

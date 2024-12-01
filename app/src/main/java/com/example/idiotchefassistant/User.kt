@@ -1,11 +1,9 @@
 package com.example.idiotchefassistant
 
-import com.example.idiotchefassistant.recipeBlock.RecipeItem
-import com.google.gson.annotations.SerializedName
+import com.example.idiotchefassistant.recipe.RecipeItem
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 data class LoginResponse(

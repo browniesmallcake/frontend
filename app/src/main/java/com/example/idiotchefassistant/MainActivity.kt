@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -15,12 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import com.example.idiotchefassistant.searchBlock.SearchPage
+import com.example.idiotchefassistant.search.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
 import com.example.idiotchefassistant.login.LoginActivity
 import com.example.idiotchefassistant.login.LoginViewModel
 import com.example.idiotchefassistant.login.LoginViewModelFactory
-import com.example.idiotchefassistant.resultBlock.ResultItem
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -43,14 +41,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             LoginViewModelFactory(applicationContext)
         )[LoginViewModel::class.java]
 
+        if (AuthTokenManager.getAuthTokenSync() != null)
+            MyApp.setLogin(true)
+
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
+        val menu = navigationView.menu
         navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        MyApp.isLogin.observe(this) { isLoggedIn ->
+            menu.findItem(R.id.nav_login).isVisible = !isLoggedIn
+            menu.findItem(R.id.nav_logout).isVisible = isLoggedIn
+        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -107,10 +114,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
+
             R.id.nav_logout -> {
                 logout()
             }
-
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

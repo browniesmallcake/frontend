@@ -1,9 +1,9 @@
 package com.example.idiotchefassistant
 
 import DetectAPI
-import com.example.idiotchefassistant.ingredientsBlock.IngredientAPI
-import com.example.idiotchefassistant.recipeBlock.RecipeAPI
-import com.example.idiotchefassistant.searchBlock.ResultSearchAPI
+import com.example.idiotchefassistant.ingredients.IngredientAPI
+import com.example.idiotchefassistant.recipe.RecipeAPI
+import com.example.idiotchefassistant.search.ResultSearchAPI
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

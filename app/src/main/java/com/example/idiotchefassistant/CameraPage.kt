@@ -19,7 +19,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
 import android.util.Size
-import com.example.idiotchefassistant.resultBlock.ResultPage
+import com.example.idiotchefassistant.result.ResultPage
 import com.example.idiotchefassistant.databinding.ActivityCameraPageBinding
 import java.io.File
 import java.text.SimpleDateFormat

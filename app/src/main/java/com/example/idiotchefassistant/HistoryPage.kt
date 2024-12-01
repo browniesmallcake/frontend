@@ -6,15 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.databinding.FragmentHistoryPageBinding
-import com.example.idiotchefassistant.recipeBlock.RecipeItem
-import com.example.idiotchefassistant.recipeBlock.RecipeItemAdapter
-import com.example.idiotchefassistant.recipeBlock.RecipePage
+import com.example.idiotchefassistant.recipe.RecipeItem
+import com.example.idiotchefassistant.recipe.RecipeItemAdapter
+import com.example.idiotchefassistant.recipe.RecipePage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +33,6 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         _binding = FragmentHistoryPageBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        history()
         val items = arrayListOf<RecipeItem>()
         historyItems.observe(viewLifecycleOwner){ data ->
             items.addAll(data)
@@ -45,6 +44,13 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         adapter.setOnItemClickListener(this)
         recycleView.adapter = adapter
 
+        val remind = binding.remindBlock
+        MyApp.isLogin.observe(viewLifecycleOwner) { isLoggedIn ->
+            recycleView.isVisible = isLoggedIn
+            if (isLoggedIn)
+                history()
+            remind.isVisible = !isLoggedIn
+        }
         return view
     }
 

@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.databinding.FragmentHomePageBinding
-import com.example.idiotchefassistant.recipeBlock.RecipeItem
-import com.example.idiotchefassistant.recipeBlock.RecipeItemAdapter
-import com.example.idiotchefassistant.recipeBlock.RecipePage
+import com.example.idiotchefassistant.recipe.RecipeItem
+import com.example.idiotchefassistant.recipe.RecipeItemAdapter
+import com.example.idiotchefassistant.recipe.RecipePage
 
 class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
     private var _binding: FragmentHomePageBinding? = null

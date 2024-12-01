@@ -7,10 +7,10 @@ import com.example.idiotchefassistant.AuthTokenManager
 import com.example.idiotchefassistant.LoginRequestBody
 import com.example.idiotchefassistant.LoginResponse
 import com.example.idiotchefassistant.MessageResponse
+import com.example.idiotchefassistant.MyApp
 import com.example.idiotchefassistant.UserResponse
 import com.example.idiotchefassistant.userDataService
 import com.example.idiotchefassistant.userService
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -20,7 +20,6 @@ import retrofit2.Response
 class LoginRepository(private val authTokenManager: AuthTokenManager, private val context: Context) {
     private var scope: CoroutineScope? = null
     val message = MutableLiveData<String>()
-    val isLogin = MutableLiveData<Boolean>()
     val user = MutableLiveData<UserResponse>()
 
     fun login(username: String, password: String) {
@@ -44,26 +43,23 @@ class LoginRepository(private val authTokenManager: AuthTokenManager, private va
                             }
                         }
                         message.postValue("登入成功")
-                        isLogin.postValue(true)
+                        MyApp.setLogin(true)
                     } else if (response.code() == 401) {
                         val errorMessage = "該名稱與信箱錯誤或密碼錯誤"
                         Log.e("Login Service", errorMessage)
                         message.postValue("登入失敗: $errorMessage")
-                        isLogin.postValue(false)
                     } else {
                         Log.i(
                             "Login Service",
                             "API Failed:${response.code()} ${response.message()}"
                         )
                         message.postValue("登入失敗")
-                        isLogin.postValue(false)
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.e("Login Service", "API call failed: ${t.message}")
                     message.postValue("登入失敗")
-                    isLogin.postValue(false)
                 }
             }
         )
@@ -83,21 +79,19 @@ class LoginRepository(private val authTokenManager: AuthTokenManager, private va
                             }
                         }
                         message.postValue("登出成功")
-                        isLogin.postValue(false)
+                        MyApp.setLogin(false)
                     } else {
                         Log.i(
                             "Logout Service",
                             "API Failed:${response.code()} ${response.message()}"
                         )
                         message.postValue("登出失敗")
-                        isLogin.postValue(true)
                     }
                 }
 
                 override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
                     Log.e("Logout Service", "API call failed: ${t.message}")
                     message.postValue("登出失敗")
-                    isLogin.postValue(true)
                 }
             }
         )
