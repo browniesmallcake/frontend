@@ -44,11 +44,9 @@ interface User {
     fun me(): Call<UserResponse>
 
     @GET("/user/logout")
-    fun logout(
-        @Header("X-API-Key") token:String
-    ): Call<MessageResponse>
+    fun logout(): Call<MessageResponse>
 
-    @GET("/user/logout/all")
+    @GET("/user/recommend")
     fun recommend(): Call<MessageResponse>
 
     @POST("/user/register")

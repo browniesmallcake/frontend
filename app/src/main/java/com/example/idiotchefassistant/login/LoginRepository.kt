@@ -62,6 +62,7 @@ class LoginRepository(private val authTokenManager: AuthTokenManager, private va
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.e("Login Service", "API call failed: ${t.message}")
+                    message.postValue("登入失敗")
                     isLogin.postValue(false)
                 }
             }
@@ -69,14 +70,7 @@ class LoginRepository(private val authTokenManager: AuthTokenManager, private va
     }
 
     fun logout() {
-        var token: String? = null
-        scope?.launch {
-            authTokenManager.authToken.collect { authToken ->
-                Log.i("Logout Service", "$authToken")
-                token = authToken
-            }
-        }
-        userService.logout(token ?: "").enqueue(
+        userDataService.logout().enqueue(
             object : Callback<MessageResponse> {
                 override fun onResponse(
                     call: Call<MessageResponse>,
@@ -88,18 +82,21 @@ class LoginRepository(private val authTokenManager: AuthTokenManager, private va
                                 authTokenManager.clearAuthToken(context)
                             }
                         }
+                        message.postValue("登出成功")
                         isLogin.postValue(false)
                     } else {
                         Log.i(
                             "Logout Service",
                             "API Failed:${response.code()} ${response.message()}"
                         )
+                        message.postValue("登出失敗")
                         isLogin.postValue(true)
                     }
                 }
 
                 override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
                     Log.e("Logout Service", "API call failed: ${t.message}")
+                    message.postValue("登出失敗")
                     isLogin.postValue(true)
                 }
             }

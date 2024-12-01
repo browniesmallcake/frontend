@@ -1,23 +1,33 @@
 package com.example.idiotchefassistant
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import com.example.idiotchefassistant.searchBlock.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
 import com.example.idiotchefassistant.login.LoginActivity
+import com.example.idiotchefassistant.login.LoginViewModel
+import com.example.idiotchefassistant.login.LoginViewModelFactory
+import com.example.idiotchefassistant.resultBlock.ResultItem
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var loginViewModel: LoginViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,6 +37,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(applicationContext)
+        )[LoginViewModel::class.java]
 
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
@@ -93,8 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.nav_logout -> {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
+                logout()
             }
 
         }
@@ -102,4 +116,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    private fun logout() {
+        AlertDialog.Builder(this)
+            .setTitle("登出確認")
+            .setMessage("你確定要登出嗎?")
+            .setPositiveButton("Yes") { _, _ ->
+                loginViewModel.logout()
+                loginViewModel.loginResult.observe(this) { result ->
+                    Toast.makeText(applicationContext, result, Toast.LENGTH_SHORT).show()
+                    if (result.contains("登出")) {
+                        setResult(Activity.RESULT_OK)
+                    }
+                }
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
 }
