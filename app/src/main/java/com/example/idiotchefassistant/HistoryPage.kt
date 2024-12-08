@@ -86,6 +86,8 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
 
     override fun onItemClick(item: RecipeItem) {
         val intent = Intent(activity, RecipePage::class.java)
+            .putExtra("rid", item.rid)
+        Log.i("rid","rid is: ${item.rid}")
         startActivity(intent)
     }
 }
