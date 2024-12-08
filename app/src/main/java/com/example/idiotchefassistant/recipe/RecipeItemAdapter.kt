@@ -29,7 +29,7 @@ class RecipeItemAdapter(private var items: List<RecipeItem>) :
         fun bind(item: RecipeItem) {
             binding.itemTitle.text = item.title
             binding.itemReview.text = item.score.toString()
-            val videoId = item.link?.let {
+            val videoId = item.link.let {
                 val regex = "https?://(?:www\\.)?youtube\\.com/watch\\?v=([\\w-]+)".toRegex()
                 val matchResult = regex.find(it)
                 matchResult?.groups?.get(1)?.value

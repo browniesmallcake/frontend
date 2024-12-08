@@ -89,7 +89,7 @@ class ResultPage : AppCompatActivity(), ResultItemAdapter.OnItemClickListener, I
 
         binding.searchButton.setOnClickListener {
             val iids = ArrayList(resultRepository.getData()?.result?.keys?: emptyList())
-            resultViewModel.resultSearch().observe(this){ rList->
+            resultViewModel.resultSearch().observe(this){
                 val intent = Intent(this, SearchPage::class.java).apply {
                     putIntegerArrayListExtra("iids", iids)
                 }

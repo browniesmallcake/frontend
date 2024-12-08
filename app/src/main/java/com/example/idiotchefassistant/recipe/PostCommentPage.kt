@@ -54,10 +54,10 @@ class PostCommentPage : DialogFragment() {
         Log.i("postComment","Content:$rid $content $rate")
         val body = CommentBody(rid, content, rate)
         recipeService.postComment(body).enqueue(object :
-            Callback<String> {
+            Callback<MessageBody> {
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<MessageBody>,
+                response: Response<MessageBody>
             ) {
                 if (response.isSuccessful) {
                     Log.i("postComment","Success:${response.body().toString()}")
@@ -66,7 +66,7 @@ class PostCommentPage : DialogFragment() {
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<MessageBody>, t: Throwable) {
                 Log.e("postComment", "API call failed: ${t.message}")
             }
         })

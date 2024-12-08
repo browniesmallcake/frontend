@@ -12,6 +12,10 @@ data class CommentBody(
     val rate: Int
 )
 
+data class MessageBody(
+    val message: String
+)
+
 interface RecipeAPI {
     @GET("/recipes/content/{rid}")
     fun getRecipeContent(
@@ -21,5 +25,5 @@ interface RecipeAPI {
     @POST("/recipes/comment")
     fun postComment(
         @Body commentBody: CommentBody
-    ): Call<String>
+    ): Call<MessageBody>
 }

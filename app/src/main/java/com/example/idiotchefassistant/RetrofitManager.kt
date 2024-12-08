@@ -1,6 +1,7 @@
 package com.example.idiotchefassistant
 
 import DetectAPI
+import android.util.Log
 import com.example.idiotchefassistant.ingredients.IngredientAPI
 import com.example.idiotchefassistant.recipe.RecipeAPI
 import com.example.idiotchefassistant.search.ResultSearchAPI
@@ -32,6 +33,7 @@ val okHttpClientAddToken = OkHttpClient.Builder()
         val request = chain.request().newBuilder()
             .addHeader("X-API-Key", "$token") // 這裡放入從 AuthTokenManager 中取得的 Token
             .build()
+        Log.i("Token","$token")
         chain.proceed(request)
     }
     .connectTimeout(60, TimeUnit.SECONDS) // 設置連接超時時間

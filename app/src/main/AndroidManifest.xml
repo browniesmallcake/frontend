@@ -24,9 +24,6 @@
             android:name=".result.ResultPage"
             android:exported="false"/>
         <activity
-            android:name=".HistoryPage"
-            android:exported="false" />
-        <activity
             android:name=".CameraPage"
             android:exported="false" />
         <activity

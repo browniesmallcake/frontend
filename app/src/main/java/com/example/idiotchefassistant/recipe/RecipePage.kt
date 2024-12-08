@@ -68,6 +68,7 @@ class RecipePage : AppCompatActivity() {
             val adapter = items?.let { RecipeCommentsAdapter(it) }
             binding.comments.layoutManager = LinearLayoutManager(this)
             binding.comments.adapter = adapter
+            Log.i("recipe comment", "${data.comments}")
         }
 
         // comments

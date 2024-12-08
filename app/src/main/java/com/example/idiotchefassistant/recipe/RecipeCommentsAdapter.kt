@@ -19,7 +19,7 @@ class RecipeCommentsAdapter(private var items: List<Comment>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recipe_ingredients_item, parent, false)
+            .inflate(R.layout.recipe_comment_item, parent, false)
         return ViewHolder(view)
     }
 
