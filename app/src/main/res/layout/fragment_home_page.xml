@@ -20,6 +20,7 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="10dp"
             android:paddingBottom="40dp"
+            android:background="@color/Nothing"
             android:src="@drawable/camera_24" />
     </RelativeLayout>
     <!--recipe list-->

@@ -92,12 +92,11 @@
             android:layout_gravity="center"
             android:padding="10dp"
             android:textStyle="bold"
-            android:text="@string/post_comment"
-            android:textColor="@color/white"/>
+            android:text="@string/post_comment"/>
 
         <!-- Community Comments Title -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/Comments"
+            android:id="@+id/comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"

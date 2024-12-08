@@ -2,16 +2,17 @@ package com.example.idiotchefassistant.recipe
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.core.content.ContextCompat
+import android.widget.RatingBar
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.idiotchefassistant.databinding.FragmentPostCommentBinding
+import com.example.idiotchefassistant.recipeService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class PostCommentPage : DialogFragment() {
     private var _binding: FragmentPostCommentBinding? = null
@@ -28,9 +29,47 @@ class PostCommentPage : DialogFragment() {
         val comment = binding.commentBlock
         val close = binding.closeButton
         val upload = binding.uploadButton
+        val rid = arguments?.getInt("rid", 0) ?: 0
 
+        rating.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { ratingBar, star, fromUser ->
+            if (fromUser) {
+                val roundedRate = Math.round(star)
+                ratingBar.rating = roundedRate.toFloat()
+            }
+        }
+
+        close.setOnClickListener{
+            dismiss()
+        }
+
+        upload.setOnClickListener{
+            post(rid, comment.text.toString(), rating.rating.toInt())
+            dismiss()
+        }
 
         return view
+    }
+
+    private fun post(rid: Int, content: String, rate: Int){
+        Log.i("postComment","Content:$rid $content $rate")
+        val body = CommentBody(rid, content, rate)
+        recipeService.postComment(body).enqueue(object :
+            Callback<String> {
+            override fun onResponse(
+                call: Call<String>,
+                response: Response<String>
+            ) {
+                if (response.isSuccessful) {
+                    Log.i("postComment","Success:${response.body().toString()}")
+                } else {
+                    Log.i("postComment","Failed:${response.code()} ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e("postComment", "API call failed: ${t.message}")
+            }
+        })
     }
 
     override fun onDestroyView() {

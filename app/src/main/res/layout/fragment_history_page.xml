@@ -28,29 +28,28 @@
         android:id="@+id/remind_block"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/remind_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
             android:text="@string/remind_login"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/remind_message"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_below="@id/remind_message"
             android:text="@string/action_sign_in"
-            android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </RelativeLayout>

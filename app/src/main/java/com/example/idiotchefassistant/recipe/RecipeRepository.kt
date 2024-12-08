@@ -31,6 +31,7 @@ class RecipeRepository {
             ){
                 if(response.isSuccessful){
                     liveData.postValue(response.body())
+                    Log.i("getRecipeContent", "Success:$rid ${response.body()?.iids} ${response.body()?.score}")
                 }
                 else{
                     liveData.postValue(RecipeData())

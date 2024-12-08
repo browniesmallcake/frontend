@@ -14,8 +14,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import com.example.idiotchefassistant.databinding.ActivityLoginBinding
-
-import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.register.RegisterPage
 
 class LoginActivity : AppCompatActivity() {
@@ -56,7 +54,6 @@ class LoginActivity : AppCompatActivity() {
             if (result.contains("登入")) {
                 setResult(Activity.RESULT_OK)
                 finish()
-                updateUiWithUser()
             }
         }
 
@@ -94,15 +91,6 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterPage::class.java)
             startActivity(intent)
         }
-    }
-    private fun updateUiWithUser() {
-        val welcome = getString(R.string.welcome)
-        val displayName = loginViewModel.user.value?.username
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
     }
 
 }

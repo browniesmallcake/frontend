@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             menu.findItem(R.id.nav_login).isVisible = !isLoggedIn
             menu.findItem(R.id.nav_logout).isVisible = isLoggedIn
         }
+        menu.findItem(R.id.nav_info).isVisible = false
+        menu.findItem(R.id.nav_setting).isVisible = false
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

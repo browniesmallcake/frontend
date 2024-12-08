@@ -6,11 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.example.idiotchefassistant.MyApp
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.ActivityRecipePageBinding
 import java.util.Locale
@@ -61,11 +63,27 @@ class RecipePage : AppCompatActivity() {
                 binding.ingredients.layoutManager = LinearLayoutManager(this)
                 binding.ingredients.adapter = adapter
             }
+            // comments
+            val items = data.comments?.toList()
+            val adapter = items?.let { RecipeCommentsAdapter(it) }
+            binding.comments.layoutManager = LinearLayoutManager(this)
+            binding.comments.adapter = adapter
         }
 
         // comments
         binding.postButton.setOnClickListener{
-
+            MyApp.isLogin.observe(this) { isLoggedIn ->
+                if (isLoggedIn) {
+                    val dialog = PostCommentPage()
+                    val bundle = Bundle()
+                    bundle.putInt("rid", rid)
+                    dialog.arguments = bundle
+                    dialog.show(supportFragmentManager, "PostCommentPage")
+                }
+                else {
+                    Toast.makeText(this, "Please log in to post comments", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

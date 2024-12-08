@@ -45,7 +45,7 @@ interface User {
     fun logout(): Call<MessageResponse>
 
     @GET("/user/recommend")
-    fun recommend(): Call<MessageResponse>
+    fun recommend(): Call<List<RecipeItem>>
 
     @POST("/user/register")
     fun register(

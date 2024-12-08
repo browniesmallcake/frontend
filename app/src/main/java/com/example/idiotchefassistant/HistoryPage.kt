@@ -34,16 +34,18 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         val view = binding.root
 
         val items = arrayListOf<RecipeItem>()
-        historyItems.observe(viewLifecycleOwner){ data ->
-            items.addAll(data)
-        }
-
         val recycleView = binding.RecipeRecycleView
         recycleView.layoutManager = LinearLayoutManager(requireContext())
+
         val adapter = RecipeItemAdapter(items)
         adapter.setOnItemClickListener(this)
         recycleView.adapter = adapter
 
+        historyItems.observe(viewLifecycleOwner){ data ->
+            items.clear()
+            items.addAll(data)
+            adapter.notifyDataSetChanged()
+        }
         val remind = binding.remindBlock
         MyApp.isLogin.observe(viewLifecycleOwner) { isLoggedIn ->
             recycleView.isVisible = isLoggedIn
