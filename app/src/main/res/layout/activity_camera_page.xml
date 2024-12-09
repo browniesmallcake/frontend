@@ -16,8 +16,8 @@
 
     <Button
         android:id="@+id/capture_button"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="36dp"
         android:elevation="2dp"
         android:text="@string/start_capture"
@@ -28,8 +28,8 @@
 
     <Button
         android:id="@+id/upload_button"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="36dp"
         android:elevation="2dp"
         android:text="@string/upload_image"

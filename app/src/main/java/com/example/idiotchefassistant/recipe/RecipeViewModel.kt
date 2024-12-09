@@ -22,6 +22,12 @@ class RecipeViewModel(private var recipeRepository: RecipeRepository):ViewModel(
         }
     }
 
+    fun getDataInLogin(rid: Int) {
+        recipeRepository.getRecipeContentIsLogin(rid).observeForever { r ->
+            userLiveData.postValue(r)
+        }
+    }
+
     fun getIngredients(ids: ArrayList<Int>): LiveData<List<String>>{
         val liveData = MutableLiveData<List<String>>()
         recipeRepository.getIngredients().observeForever{ list ->

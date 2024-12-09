@@ -19,8 +19,8 @@
     <string name="user_image">user img</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Setting</string>
-    <string name="sync_header">interface setting</string>
+    <string name="messages_header">設定</string>
+    <string name="sync_header">介面設定</string>
 
     <!-- Messages Preferences -->
     <string name="history_title">歷史紀錄</string>
@@ -33,9 +33,9 @@
     <!-- res/values/strings.xml -->
     <string name="user_review">Review: %d stars</string>
 
-    <string name="take_photo">Take Photo</string>
-    <string name="start_capture">Start Capture</string>
-    <string name="stop_capture">Stop Capture</string>
+    <string name="take_photo">拍攝</string>
+    <string name="start_capture">拍攝</string>
+    <string name="stop_capture">停止</string>
     <string name="title_activity_result_page">ResultPage</string>
 
     <!-- Messages Preferences -->
@@ -43,7 +43,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="upload_image">Upload</string>
+    <string name="upload_image">上傳</string>
     <string name="Confirm">確認</string>
     <string name="Cancel">取消</string>
     <string name="enter_the_ingredient">輸入食材</string>

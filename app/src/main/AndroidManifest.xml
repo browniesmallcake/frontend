@@ -16,7 +16,7 @@
         android:icon="@drawable/logo"
         android:label="傻瓜廚師"
         android:name=".MyApp"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.IdiotChefAssistant"
         tools:targetApi="31">

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import androidx.fragment.app.DialogFragment
 import com.example.idiotchefassistant.databinding.FragmentPostCommentBinding
+import com.example.idiotchefassistant.recipeAddTokenService
 import com.example.idiotchefassistant.recipeService
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,7 +54,7 @@ class PostCommentPage : DialogFragment() {
     private fun post(rid: Int, content: String, rate: Int){
         Log.i("postComment","Content:$rid $content $rate")
         val body = CommentBody(rid, content, rate)
-        recipeService.postComment(body).enqueue(object :
+        recipeAddTokenService.postComment(body).enqueue(object :
             Callback<MessageBody> {
             override fun onResponse(
                 call: Call<MessageBody>,

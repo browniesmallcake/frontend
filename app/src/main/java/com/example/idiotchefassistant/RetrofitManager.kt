@@ -26,6 +26,7 @@ val detectService: DetectAPI = retrofit.create(DetectAPI::class.java)
 val ingredientService: IngredientAPI = retrofit.create(IngredientAPI::class.java)
 val resultSearchService: ResultSearchAPI = retrofit.create(ResultSearchAPI::class.java)
 val userService: User = retrofit.create(User::class.java)
+val recipeService: RecipeAPI = retrofit.create(RecipeAPI::class.java)
 
 val okHttpClientAddToken = OkHttpClient.Builder()
     .addInterceptor { chain ->
@@ -47,4 +48,4 @@ var retrofitAddToken: Retrofit = Retrofit.Builder()
     .client(okHttpClientAddToken)
     .build()
 val userDataService: User = retrofitAddToken.create(User::class.java)
-val recipeService: RecipeAPI = retrofitAddToken.create(RecipeAPI::class.java)
+val recipeAddTokenService: RecipeAPI = retrofitAddToken.create(RecipeAPI::class.java)

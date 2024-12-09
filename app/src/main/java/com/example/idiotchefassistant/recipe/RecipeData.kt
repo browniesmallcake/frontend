@@ -12,7 +12,7 @@ class RecipeData {
 }
 
 data class Comment(
-    val name: String,
+    val username: String,
     val content: String,
-    val review: Int
+    val score: Int
 )

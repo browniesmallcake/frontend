@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.idiotchefassistant.databinding.FragmentHistoryPageBinding
+import com.example.idiotchefassistant.login.LoginActivity
 import com.example.idiotchefassistant.recipe.RecipeItem
 import com.example.idiotchefassistant.recipe.RecipeItemAdapter
 import com.example.idiotchefassistant.recipe.RecipePage
@@ -47,6 +48,10 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
             adapter.notifyDataSetChanged()
         }
         val remind = binding.remindBlock
+        binding.login.setOnClickListener{
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+        }
         MyApp.isLogin.observe(viewLifecycleOwner) { isLoggedIn ->
             recycleView.isVisible = isLoggedIn
             if (isLoggedIn)

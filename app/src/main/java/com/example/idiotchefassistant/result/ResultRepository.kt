@@ -11,6 +11,7 @@ import java.util.concurrent.Executors
 
 class ResultRepository {
     private var nowData: MutableLiveData<ResultData> = MutableLiveData(ResultData())
+    private var dataIsEmpty: MutableLiveData<Boolean> = MutableLiveData(false)
     fun loadData(task: OnTaskFinish): MutableLiveData<ResultData> {
         Executors.newSingleThreadExecutor().submit {
             val results = ResultData()

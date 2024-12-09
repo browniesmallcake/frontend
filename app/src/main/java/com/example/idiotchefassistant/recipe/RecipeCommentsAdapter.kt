@@ -26,8 +26,8 @@ class RecipeCommentsAdapter(private var items: List<Comment>) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.name.text = items[position].name
-        holder.rate.rating = items[position].review.toFloat()
+        holder.name.text = items[position].username
+        holder.rate.rating = items[position].score.toFloat()
         holder.content.text = items[position].content
     }
 }

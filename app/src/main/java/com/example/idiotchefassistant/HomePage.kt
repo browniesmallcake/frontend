@@ -56,14 +56,6 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
         return view
     }
 
-    private fun generateFakeData(): List<RecipeItem> {
-        val fakeData = mutableListOf<RecipeItem>()
-        for (i in 1..10) {
-            fakeData.add(RecipeItem(182,"食譜 $i", "https://www.youtube.com/watch?v=OblT91aXQ5c", 5))
-        }
-        return fakeData
-    }
-
     private fun recommend(){
         userDataService.recommend().enqueue(
             object : Callback<List<RecipeItem>> {
@@ -96,6 +88,8 @@ class HomePage : Fragment(), RecipeItemAdapter.OnItemClickListener {
 
     override fun onItemClick(item: RecipeItem){
         val intent = Intent(activity, RecipePage::class.java)
+            .putExtra("rid", item.rid)
+        Log.i("rid","rid is: ${item.rid}")
         startActivity(intent)
     }
 

@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -35,7 +36,14 @@ class RecipePage : AppCompatActivity() {
 
         // get recipe content
         val rid = intent.getIntExtra("rid", -1)
-        recipeViewModel.getData(rid)
+        MyApp.isLogin.observe(this) { isLoggedIn ->
+            if (isLoggedIn){
+                recipeViewModel.getDataInLogin(rid)
+            }
+            else{
+                recipeViewModel.getData(rid)
+            }
+        }
 
         recipeViewModel.callBack().observe(this) { data ->
             Log.d("SearchPage", "Received items: $data")
