@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.mainLayout
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +14,7 @@ import com.example.idiotchefassistant.databinding.FragmentHomePageBinding
 import com.example.idiotchefassistant.recipe.RecipeItem
 import com.example.idiotchefassistant.recipe.RecipeItemAdapter
 import com.example.idiotchefassistant.recipe.RecipePage
+import com.example.idiotchefassistant.userDataService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

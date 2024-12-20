@@ -6,12 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.idiotchefassistant.MainActivity
+import com.example.idiotchefassistant.mainLayout.MainActivity
 import com.example.idiotchefassistant.databinding.ActivitySearchPageBinding
 import com.example.idiotchefassistant.recipe.RecipeItem
 import com.example.idiotchefassistant.recipe.RecipeItemAdapter
@@ -33,10 +34,18 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         searchFactory = SearchFactory(searchRepository)
         searchViewModel = ViewModelProvider(this, searchFactory)[SearchViewModel::class.java]
 
+        val recipeList = binding.RecipeRecycleView
+        val home = binding.HomeBtn
+        val keyword = binding.EditText
+        val search = binding.SearchBtn
+        val back = binding.backPage
+        val next = binding.nextPage
+        val offset = binding.offset
+
         val adapter = RecipeItemAdapter(emptyList())
         adapter.setOnItemClickListener(this)
-        binding.RecipeRecycleView.layoutManager = LinearLayoutManager(this)
-        binding.RecipeRecycleView.adapter = adapter
+        recipeList.layoutManager = LinearLayoutManager(this)
+        recipeList.adapter = adapter
 
 //      Observe live data
         searchViewModel.callBack().observe(this){data ->
@@ -48,33 +57,36 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         searchViewModel.setIids(iids.toList())
         searchViewModel.iidsSearch()
 
-        binding.HomeBtn.setOnClickListener{
+        home.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
-        binding.EditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val newKeyword = s.toString()
-                searchViewModel.setKeyword(newKeyword)
+        keyword.apply {
+            afterTextChanged {
+                searchViewModel.setKeyword(keyword.text.toString())
             }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.SearchBtn.setOnClickListener{
-            searchViewModel.keywordSearch()
+            setOnEditorActionListener { _, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_DONE ->
+                        searchViewModel.keywordSearch()
+                }
+                false
+            }
+            search.setOnClickListener{
+                searchViewModel.keywordSearch()
+            }
         }
-        binding.backPage.setOnClickListener{
+
+        back.setOnClickListener{
             searchViewModel.backPage().observe(this){ isLastPage ->
                 if(!isLastPage){
                     Toast.makeText(this, "已經是第一頁了", Toast.LENGTH_LONG).show()
                 }
             }
         }
-        binding.nextPage.setOnClickListener{
+        next.setOnClickListener{
             searchViewModel.nextPage().observe(this) { isLastPage ->
                 if (isLastPage) {
                     searchViewModel.backPage()
@@ -82,9 +94,9 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
                 }
             }
         }
-        searchViewModel.nowOffset.observe(this) { offset ->
-            val s = offset + 1
-            binding.offset.text = s.toString()
+        searchViewModel.nowOffset.observe(this) { n ->
+            val s = n + 1
+            offset.text = s.toString()
         }
     }
 
@@ -94,6 +106,18 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         Log.i("rid","rid is: ${item.rid}")
         startActivity(intent)
     }
+}
+
+fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChanged.invoke(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    })
 }
 
 

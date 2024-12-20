@@ -14,7 +14,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
-        android:label="傻瓜廚師"
+        android:label="智慧廚師"
         android:name=".MyApp"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
@@ -24,7 +24,7 @@
             android:name=".result.ResultPage"
             android:exported="false"/>
         <activity
-            android:name=".CameraPage"
+            android:name=".mainLayout.CameraPage"
             android:exported="false" />
         <activity
             android:name=".recipe.RecipePage"
@@ -40,7 +40,7 @@
             android:name=".register.RegisterPage"
             android:exported="false"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".mainLayout.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

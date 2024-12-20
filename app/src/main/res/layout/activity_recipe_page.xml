@@ -32,6 +32,13 @@
             android:src="@drawable/logo"
             android:contentDescription="@string/img_des" />
 
+        <TextView
+            android:id="@+id/video_remind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_video_remind"
+            />
+
         <!-- Recipe Review -->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,6 +64,23 @@
                 android:scaleY="0.6"
                 android:stepSize="1"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/author_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/recipe_author_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+
         <!-- Ingredients Menu -->
         <TextView
             android:id="@+id/ingredients_title"

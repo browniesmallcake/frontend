@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.mainLayout
 
 import android.Manifest
 import android.content.Intent
@@ -46,7 +46,8 @@ class CameraPage : AppCompatActivity() {
             initializeCamera()
         } else {
             ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
         }
         // Set up the listeners for take photo and video capture buttons
         viewBinding.captureButton.setOnClickListener { capturePhotos() }

@@ -2,11 +2,11 @@ package com.example.idiotchefassistant.recipe
 
 class RecipeData {
     val title: String = "Unknown"
-    //    val author: String,
     val description: String? = null
     val video: String? = null
-    val rtype: String? = null
     val score: Float = 0.toFloat()
+    val rtype: String? = null
+    val author: String? = null
     val comments: ArrayList<Comment>? = null
     val iids: ArrayList<Int> = arrayListOf()
 }

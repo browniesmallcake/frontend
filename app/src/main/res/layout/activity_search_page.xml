@@ -36,17 +36,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <ImageView
-            android:id="@+id/SearchBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:padding="14dp"
-            android:src="@drawable/search_24"
-            android:contentDescription="@string/img_des"
+            android:id="@+id/back_page"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
             android:background="@color/Nothing"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/baseline_arrow_left_24"
+            android:contentDescription="@string/img_des"
+            />
+
 
         <EditText
             android:id="@+id/EditText"
@@ -61,14 +61,16 @@
             android:hint="@string/enter_recipe_name"/>
 
         <ImageView
-            android:id="@+id/back_page"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/Nothing"
-            android:src="@drawable/baseline_arrow_left_24"
+            android:id="@+id/SearchBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:padding="14dp"
+            android:src="@drawable/search_24"
             android:contentDescription="@string/img_des"
-            />
+            android:background="@color/Nothing"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/offset"

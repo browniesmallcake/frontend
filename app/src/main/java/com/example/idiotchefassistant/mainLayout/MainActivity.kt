@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.mainLayout
 
 import android.app.Activity
 import android.content.Intent
@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import com.example.idiotchefassistant.AuthTokenManager
+import com.example.idiotchefassistant.MyApp
+import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.search.SearchPage
 import com.example.idiotchefassistant.databinding.ActivityMainBinding
 import com.example.idiotchefassistant.login.LoginActivity
@@ -58,8 +61,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             menu.findItem(R.id.nav_login).isVisible = !isLoggedIn
             menu.findItem(R.id.nav_logout).isVisible = isLoggedIn
         }
-        menu.findItem(R.id.nav_info).isVisible = false
-        menu.findItem(R.id.nav_setting).isVisible = false
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -106,11 +107,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_history -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HistoryPage()).commit()
 
-            R.id.nav_info -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomePage()).commit()
+            R.id.nav_about -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AboutUsPage()).commit()
 
-            R.id.nav_setting -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, SettingsFragment()).commit()
+            R.id.nav_info -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, InfoPage()).commit()
 
             R.id.nav_login -> {
                 val intent = Intent(this, LoginActivity::class.java)

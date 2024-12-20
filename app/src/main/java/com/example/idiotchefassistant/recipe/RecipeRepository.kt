@@ -58,8 +58,9 @@ class RecipeRepository {
                 response: Response<RecipeData>
             ){
                 if(response.isSuccessful){
+                    val result = response.body()
                     liveData.postValue(response.body())
-                    Log.i("getRecipeContent", "Success:$rid ${response.body()?.iids} ${response.body()?.score}")
+                    Log.i("getRecipeContent", "Success:$rid ${result?.iids} ${result?.score} ${result?.author} ${result?.comments}")
                 }
                 else{
                     liveData.postValue(RecipeData())

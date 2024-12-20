@@ -1,4 +1,4 @@
-package com.example.idiotchefassistant
+package com.example.idiotchefassistant.mainLayout
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,11 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.idiotchefassistant.MyApp
 import com.example.idiotchefassistant.databinding.FragmentHistoryPageBinding
 import com.example.idiotchefassistant.login.LoginActivity
 import com.example.idiotchefassistant.recipe.RecipeItem
 import com.example.idiotchefassistant.recipe.RecipeItemAdapter
 import com.example.idiotchefassistant.recipe.RecipePage
+import com.example.idiotchefassistant.userDataService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,17 +71,17 @@ class HistoryPage : Fragment(), RecipeItemAdapter.OnItemClickListener {
                 response: Response<List<RecipeItem>>
             ) {
                 if (response.isSuccessful) {
-                    _historyItems.postValue(response.body())
+                    _historyItems.value = response.body()
                     Log.i("userHistory","Success:${response.body().toString()}")
                 } else {
                     Log.i("userHistory","Failed:${response.code()} ${response.message()}")
-                    _historyItems.postValue(emptyList())
+                    _historyItems.value = emptyList()
                 }
             }
 
             override fun onFailure(call: Call<List<RecipeItem>>, t: Throwable) {
                 Log.e("userHistory", "API call failed: ${t.message}")
-                _historyItems.postValue(emptyList())
+                _historyItems.value = emptyList()
             }
         })
     }

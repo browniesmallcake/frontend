@@ -65,6 +65,8 @@ class RecipePage : AppCompatActivity() {
             val floatValue: Float = (data?.score ?: 0).toFloat()
             binding.recipeReviewNum.text = floatValue.toString()
             binding.recipeReviewStar.rating = floatValue
+            // author
+            binding.author.text = data?.author ?: "Unknown"
             // ingredients
             recipeViewModel.getIngredients(data.iids).observe(this) { ingredients ->
                 val adapter = RecipeIngredientsAdapter(ingredients)
