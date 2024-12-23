@@ -11,9 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val okHttpClient = OkHttpClient.Builder()
-    .connectTimeout(60, TimeUnit.SECONDS) // 設置連接超時時間
-    .readTimeout(60, TimeUnit.SECONDS)    // 設置讀取超時時間
-    .writeTimeout(60, TimeUnit.SECONDS)   // 設置寫入超時時間
+    .connectTimeout(20, TimeUnit.SECONDS) // 設置連接超時時間
+    .readTimeout(20, TimeUnit.SECONDS)    // 設置讀取超時時間
+    .writeTimeout(20, TimeUnit.SECONDS)   // 設置寫入超時時間
     .build()
 
 var retrofit: Retrofit = Retrofit.Builder()
@@ -37,9 +37,9 @@ val okHttpClientAddToken = OkHttpClient.Builder()
         Log.i("Token","$token")
         chain.proceed(request)
     }
-    .connectTimeout(60, TimeUnit.SECONDS) // 設置連接超時時間
-    .readTimeout(60, TimeUnit.SECONDS)    // 設置讀取超時時間
-    .writeTimeout(60, TimeUnit.SECONDS)   // 設置寫入超時時間
+    .connectTimeout(20, TimeUnit.SECONDS) // 設置連接超時時間
+    .readTimeout(20, TimeUnit.SECONDS)    // 設置讀取超時時間
+    .writeTimeout(20, TimeUnit.SECONDS)   // 設置寫入超時時間
     .build()
 
 var retrofitAddToken: Retrofit = Retrofit.Builder()

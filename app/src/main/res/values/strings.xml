@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">智慧廚師助手</string>
+    <string name="app_name">傻瓜廚師助手</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email_or_name">信箱或使用者名稱</string>
     <string name="prompt_password">密碼</string>
