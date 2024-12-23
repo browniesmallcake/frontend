@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 class IngredientViewModel(private var ingredientRepository: IngredientRepository): ViewModel() {
     private var userLiveData = MutableLiveData<IngredientData>()
+
     private val ingredientObserver = Observer<ArrayList<IngredientItem>> { list ->
         if (list.isNotEmpty()) {
             val names: Array<String> = list.map {

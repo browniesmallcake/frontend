@@ -36,7 +36,6 @@
     <string name="take_photo">拍攝</string>
     <string name="start_capture">拍攝</string>
     <string name="stop_capture">停止</string>
-    <string name="title_activity_result_page">ResultPage</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
@@ -71,14 +70,15 @@
     <string name="history">歷史紀錄</string>
     <string name="info">個人資料</string>
     <string name="about_us">關於我們</string>
-    <string name="about_us_title">關於我們 - 智慧厨師輔助系統</string>
-    <string name="about_us_content">我們是國立彰化師範大學資訊工程學系學士畢業專題組。\n主要功能使用Gemini AI模型辨識食材，以辨識到的食材推薦資料庫裡的食譜。\n有手機APP版和網頁版，提供友善界面功能。</string>
+    <string name="about_us_title">關於我們 - 傻瓜廚師助手\n生成式AI控制與食譜推薦系統</string>
+    <string name="about_us_content">我們是國立彰化師範大學資訊工程學系學士畢業專題組。\n主要功能使用Gemini AI模型辨識食材，以辨識到的食材推薦資料庫裡的食譜。\n有手機APP版和網頁版，提供友善界面功能。\n\nThis project, "Dummy Chef Assistance: \nRecipes control and recommendation systems using AI applications" integrates advanced Gemini API ingredient recognition technology with algorithmic filtering to recommend recipes based on identified ingredients. \nThe system aims to enhance user experience by providing relevant and high-quality recipe suggestions. \nIt is available as a mobile app and a web version, offering user-friendly interface functionality.</string>
     <string name="about_us_title2">特別感謝</string>
     <string name="about_us_subtitle1">提供我們食譜教學影片授權的YouTuber</string>
     <string name="about_us_yt1">克里斯餐桌：https://www.youtube.com/@christable0202</string>
     <string name="about_us_yt2">Rosalina\'s Kitchen 蘿潔塔的廚房: https://www.youtube.com/@RosalinaKitchen</string>
     <string name="about_us_yt3">菜單研究所：https://www.youtube.com/@menustudy</string>
     <string name="about_us_subtitle2">網路上的資源</string>
-    <string name="about_us_content2">Gemini API: 提供强大的圖片辨識\nAPI Flaticon: 提供免費的Icon。</string>
-    <string name="about_us_content3"><![CDATA[注：本網頁Icon來源為\n https://www.flaticon.com/free-icon/chef-s-hat_11352866?term=chef&page=1&position=46&origin=search&related_id=11352866]]></string>
+    <string name="about_us_content2">Gemini API: 提供强大的圖片辨識\nAPI Flaticon: 提供免費的Icon。\n注：本網頁Icon來源為 flaticon</string>
+    <string name="login">登入</string>
+    <string name="logout">登出</string>
 </resources>

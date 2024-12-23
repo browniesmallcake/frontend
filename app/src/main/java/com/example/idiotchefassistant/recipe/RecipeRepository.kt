@@ -1,10 +1,8 @@
 package com.example.idiotchefassistant.recipe
 
 import android.util.Log
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.idiotchefassistant.MyApp
 import com.example.idiotchefassistant.ingredientService
 import com.example.idiotchefassistant.ingredients.IngredientItem
 import com.example.idiotchefassistant.recipeAddTokenService

@@ -14,7 +14,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
-        android:label="智慧廚師"
+        android:label="傻瓜廚師"
         android:name=".MyApp"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
