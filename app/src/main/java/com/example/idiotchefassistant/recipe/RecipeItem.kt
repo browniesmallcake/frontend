@@ -8,7 +8,7 @@ data class RecipeItem(
     val rid:Int,
     val title:String,
     val link:String,
-    val score:Int
+    val score:Float
 ): Parcelable
 
 //data class CommitItem(val userImg: Int, val userName:String, val context:String, val review:Int)

@@ -80,11 +80,10 @@ class SearchPage : AppCompatActivity(), RecipeItemAdapter.OnItemClickListener {
         }
 
         back.setOnClickListener{
-            searchViewModel.backPage().observe(this){ isLastPage ->
-                if(!isLastPage){
-                    Toast.makeText(this, "已經是第一頁了", Toast.LENGTH_LONG).show()
-                }
-            }
+            if(searchViewModel.nowOffset.value == 0)
+                Toast.makeText(this, "已經是第一頁了", Toast.LENGTH_LONG).show()
+            else
+                searchViewModel.backPage()
         }
         next.setOnClickListener{
             searchViewModel.nextPage().observe(this) { isLastPage ->

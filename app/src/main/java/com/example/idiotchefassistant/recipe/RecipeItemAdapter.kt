@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.RecipeItemListBinding
+import java.text.DecimalFormat
 
 class RecipeItemAdapter(private var items: List<RecipeItem>) :
     RecyclerView.Adapter<RecipeItemAdapter.ViewHolder>() {
@@ -28,7 +29,8 @@ class RecipeItemAdapter(private var items: List<RecipeItem>) :
 
         fun bind(item: RecipeItem) {
             binding.itemTitle.text = item.title
-            binding.itemReview.text = item.score.toString()
+            val df = DecimalFormat("#.#")
+            binding.itemReview.text = df.format(item.score)
             val videoId = item.link.let {
                 val regex = "https?://(?:www\\.)?youtube\\.com/watch\\?v=([\\w-]+)".toRegex()
                 val matchResult = regex.find(it)

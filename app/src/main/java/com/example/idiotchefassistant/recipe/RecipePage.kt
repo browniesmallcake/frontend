@@ -15,6 +15,7 @@ import coil.load
 import com.example.idiotchefassistant.MyApp
 import com.example.idiotchefassistant.R
 import com.example.idiotchefassistant.databinding.ActivityRecipePageBinding
+import java.text.DecimalFormat
 import java.util.Locale
 
 class RecipePage : AppCompatActivity() {
@@ -62,7 +63,8 @@ class RecipePage : AppCompatActivity() {
             }
             // score
             val floatValue: Float = (data?.score ?: 0).toFloat()
-            binding.recipeReviewNum.text = floatValue.toString()
+            val df = DecimalFormat("#.#")
+            binding.recipeReviewNum.text = df.format(floatValue)
             binding.recipeReviewStar.rating = floatValue
             // author
             binding.author.text = data?.author ?: "Unknown"
